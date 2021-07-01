@@ -148,10 +148,10 @@ export class Events extends Component {
               shadowRadius: 5,
           }}
             animatedValue={animatedValue}>
-            <Text
+            {/* <Text
               style={{fontWeight: 'normal', fontSize: 20, color: 'white'}}>
              Events
-            </Text>
+            </Text> */}
           </View>
         )}
         parallaxBackgroundScrollSpeed={5}

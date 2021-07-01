@@ -1,12 +1,43 @@
-import React, { Component } from 'react';
-import { Text, View, SafeAreaView, TouchableOpacity, TextInput, ScrollView, StyleSheet } from 'react-native';
-import { CustomHeader } from '../index';
-import { Avatar } from 'react-native-elements';
+import React, {Component} from 'react';
+import {
+  Text,
+  View,
+  SafeAreaView,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
+import {CustomHeader} from '../index';
+import {Avatar} from 'react-native-elements';
 import QRCode from 'react-native-qrcode-generator';
 import AsyncStorage from '@react-native-community/async-storage';
+import * as Animatable from 'react-native-animatable';
+// import ImagePicker from 'react-native-image-picker';
+import RNFetchBlob from 'rn-fetch-blob';
+import ImagePicker from 'react-native-image-picker';
+// const options = {
+//   title: 'Select Avatar',
+//   takePhotoButtonTitle: 'Take a photo',
+//   chooseFromLibraryButtonTitle: 'choose from galary',
+//   quality: 1
+// }
+var options = {
+  title: 'Select Image',
+  customButtons: [
+    {
+      name: 'customOptionKey',
+      title: 'Choose Photo from Custom Option',
+    },
+  ],
+  storageOptions: {
+    skipBackup: true,
+    path: 'images',
+  },
+};
 export class Profile extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       isLoading: true,
       dataSource: '',
@@ -14,35 +45,201 @@ export class Profile extends Component {
       _name: '',
       _email: '',
       _mobile_no: '',
-      _points: '',
-      _cus_id:''
+      _points: 0,
+      _cus_id: '',
+      _orderCount: '0',
+      _orderboxCount: 0,
+      imageSource: null,
+      dataa: null,
+      abc: '',
     };
   }
   state = {
     text: 'https://facebook.github.io/react-native/',
   };
   async componentDidMount() {
+    const {navigation} = this.props;
+    this._unsubscribe = navigation.addListener('focus', () => {
+      this.getoPoints();
+      this.getorderCount();
+      this.getorderBoxCount();
+      this.getoprofileDetails();
+    });
+  }
+  componentWillUnmount() {
+    // Remove the event listener
+    this._unsubscribe();
+  }
+  selectPhoto() {
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else {
+        const source = {uri: response.uri};
+        const imdata = response.data;
+
+        this.setState({
+          isLoading: false,
+          imageSource: source,
+          abc: '',
+          dataa: imdata,
+        });
+
+        this.uploadPhoto();
+      }
+    });
+  }
+  async uploadPhoto() {
+    var aaaa = this.state.dataa;
+    const myArray = await AsyncStorage.getItem('cus_id');
+
+    RNFetchBlob.fetch(
+      'POST',
+      'https://satasmemiy.tk/api/fileUpload',
+      {
+        Authorization: 'Bearer access-token',
+        otherHeader: 'foo',
+        'Content-Type': 'multipart/form-data',
+        Accept: 'application/json',
+      
+      },
+      [
+        {name: 'image', filename: 'image.png', type: 'image/png', data: aaaa},
+        {name: 'member_id', data: myArray},
+      ],
+    )
+      .then((resp) => {
+        console.log(resp.text());
+      
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    this.setState({
+      isLoading: false,
+
+      dataa: '',
+    });
+  }
+  async getoPoints() {
+    const myArray = await AsyncStorage.getItem('cus_id');
+    fetch('https://satasmemiy.tk/api/points/' + myArray, {
+      method: 'post',
+
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: 2,
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          isLoading: false,
+          _id: responseJson.id,
+          _points: responseJson.points,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  async getoprofileDetails() {
     const myArray = await AsyncStorage.getItem('cus_id');
     fetch('https://satasmemiy.tk/api/profile/' + myArray, {
       method: 'post',
-      // header: {
-      //   'Accept': 'application/json',
-      //   'Content-Type': 'application/json',
-      // },
+
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        "id": 2,
-
-
-      })
-
-
-    }).then((response) => response.json())
+        id: 2,
+      }),
+    })
+      .then((response) => response.json())
       .then((responseJson) => {
+        this.setState({
+          isLoading: false,
+          _id: responseJson.id,
+          _name: responseJson.name,
+          _email: responseJson.email,
+          _mobile_no: responseJson.mobile_no,
+          text: responseJson.mobile_no,
+          // _points: responseJson.points,
+          _cus_id: myArray,
+          abc : responseJson.image,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
+  async getorderCount() {
+    const myArray = await AsyncStorage.getItem('cus_id');
+    fetch('https://satasmemiy.tk/api/countorder/' + myArray, {
+      method: 'post',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          isLoading: false,
+          _orderCount: responseJson.orders_Count,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  async getorderBoxCount() {
+    const myArray = await AsyncStorage.getItem('cus_id');
+    fetch('https://satasmemiy.tk/api/countorderbox/' + myArray, {
+      method: 'post',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          isLoading: false,
+          _orderboxCount: responseJson.orderbox_Count,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  async refresh() {
+    this.getorderCount();
+    this.getorderBoxCount();
+    // const myArray = await AsyncStorage.getItem('cus_id');
+    const myArray = await AsyncStorage.getItem('cus_id');
+    fetch('https://satasmemiy.tk/api/profile/' + myArray, {
+      method: 'post',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: 1,
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
         this.setState({
           isLoading: false,
           _id: responseJson.id,
@@ -51,112 +248,162 @@ export class Profile extends Component {
           _mobile_no: responseJson.mobile_no,
           text: responseJson.mobile_no,
           _points: responseJson.points,
-          _cus_id:myArray
         });
-
-
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.error(error);
-      })
-
-  }
-
-   refresh = () => {
-   
-   // const myArray = await AsyncStorage.getItem('cus_id');
-  
-    fetch('https://satasmemiy.tk/api/profile/' + this.state._cus_id, {
-      method: 'post',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        "id": 1,
-
-
-      })
-
-
-    }).then((response) => response.json())
-      .then((responseJson) => {
-
-         this.setState({
-          isLoading: false,
-          _id: responseJson.id,
-          _name: responseJson.name,
-          _email: responseJson.email,
-          _mobile_no: responseJson.mobile_no,
-          text: responseJson.mobile_no,
-          _points: responseJson.points
-        });
-
-
-      }).catch((error) => {
-        console.error(error);
-      })
-
+      });
   }
   render() {
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <CustomHeader title="" isHome={true} bdcolor='#3B7457' bgcolor='#3B7457' navigation={this.props.navigation} />
+      <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+        <CustomHeader
+          title=""
+          isHome={true}
+          bdcolor="#3B7457"
+          bgcolor="#3B7457"
+          navigation={this.props.navigation}
+        />
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}
-        >
-          <View style={styles.triangleCorner}>
-            {/* <View style={{ backgroundColor: '#009688', height: 100, zIndex: -1 }}> */}
-            {/* <View style={{ marginTop: 0, marginLeft: 20 }}>
+          style={styles.scrollView}>
+          <View style={styles.header}>
+            <View style={{height: 200}}>
+              <View
+                style={{
+                  backgroundColor: '#3B7457',
+                  height: 240,
+                  zIndex: -1,
+                }}></View>
+              <View
+                style={{
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  bottom: 240,
+                }}>
+                <Avatar
+                  rounded
+                  showEditButton
+                  size={120}
+                  // source={
+                  //   this.state.imageSource !== null
+                  //     ? this.state.imageSource
+                  //     : require('../images/profiled.png')
+                  // }
 
-            </View> */}
-          </View>
-          <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center', bottom: 140 }}>
+                  source={
+                    this.state.abc != '' ? { uri: "https://satasmemiy.tk/images/Customer/" + this.state.abc } :
+                      (this.state.imageSource !== null ? this.state.imageSource : require('../images/profiled.png'))
+                  }
 
-            <Avatar
-              rounded
-              showEditButton
-              size={150}
-              source={(require('../images/profiled.png'))
-              }
-              containerStyle={{
-                margin: 10, shadowColor: 'rgba(0,0,0, .4)', // IOS
-                shadowOffset: { height: 3, width: 8 }, borderWidth: 6, borderColor: 'white', // IOS
-                shadowOpacity: 3, // IOS
-                shadowRadius: 5, elevation: 8
-              }}
 
-            />
-            <Text style={{ fontSize: 22, fontWeight: 'bold' }}>{this.state._name}</Text>
-            <Text style={{ color: 'gray' }}>{this.state._email}</Text>
+                  containerStyle={{
+                    margin: 10,
+                    shadowColor: 'rgba(0,0,0, .4)', // IOS
+                    shadowOffset: {height: 3, width: 8},
+                    borderWidth: 6,
+                    borderColor: 'white', // IOS
+                    shadowOpacity: 3, // IOS
+                    shadowRadius: 5,
+                    elevation: 8,
+                  }}
+                  onEditPress={() => console.log('edit button pressed')}
+                  onLongPress={() => console.log('component long pressed')}
+                  // onPress={() => this.props.navigation.navigate('ProfileImageView')}
+                  editButton={{
+                    name: 'edit',
+                  }}
+                  onPress={() => this.selectPhoto()}
+                  // showAccessory
+                  // onAccessoryPress={() => this.selectPhoto()}
+                  // accessory={{ size: 33, style: { backgroundColor: 'gray', height: 45, paddingTop: 3, width: 45, borderRadius: 25, alignItems: 'center', alignContent: 'center' } }}
+                />
 
-            <View style={{ flexDirection: 'row' }}>
-              <View>
-                <Text style={{ fontSize: 45, fontWeight: 'bold', color: 'red' }}>{this.state._points}</Text>
-                <Text style={{ fontSize: 16 }}>Total Points</Text>
+                <Text
+                  style={{fontSize: 22, fontWeight: 'bold', color: 'white'}}>
+                  {this.state._name}
+                </Text>
+                <Text style={{color: 'white'}}>{this.state._email}</Text>
               </View>
             </View>
-            <View style={{ paddingTop: 30 }}>
-
-
-              <QRCode
-                value={"" + this.state._mobile_no}
-                size={200}
-                bgColor='black'
-                fgColor='white' />
-            </View>
-            <TouchableOpacity style={{ marginTop: 20 }}
-             onPress={this.refresh}
-
-            >
-              <Text>refresh</Text>
-
-            </TouchableOpacity>
           </View>
 
-        </ScrollView>
+          <Animatable.View style={styles.footer} animation="fadeInUpBig">
+            <View style={{height: 500}}>
+              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingHorizontal: 40,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 35,
+                      fontWeight: 'bold',
+                      color: '#3B7457',
+                    }}>
+                    {this.state._orderCount != null
+                      ? this.state._orderCount
+                      : 0}
+                  </Text>
+                  <Text style={{fontSize: 16, marginTop: -10}}>Orders</Text>
+                </View>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingHorizontal: 40,
+                  }}>
+                  <Text
+                    style={{fontSize: 45, fontWeight: 'bold', color: 'red'}}>
+                    {this.state._points != null ? this.state._points : 0}
+                  </Text>
+                  <Text style={{fontSize: 16, marginTop: -10}}>Points</Text>
+                </View>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingHorizontal: 40,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 35,
+                      fontWeight: 'bold',
+                      color: '#3B7457',
+                    }}>
+                    {this.state._orderboxCount != null
+                      ? this.state._orderboxCount
+                      : 0}
+                  </Text>
+                  <Text style={{fontSize: 16, marginTop: -10}}>Box Orders</Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  paddingTop: 30,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <QRCode
+                  value={'' + this.state._mobile_no}
+                  size={200}
+                  bgColor="black"
+                  fgColor="white"
+                />
 
+                <TouchableOpacity
+                  style={{marginTop: 20}}
+                  onPress={() => this.selectPhoto()}>
+                  <Text>refresh</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Animatable.View>
+        </ScrollView>
       </SafeAreaView>
     );
   }
@@ -167,7 +414,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ff9100',
 
-
     flexDirection: 'row',
     padding: 10,
     marginLeft: 16,
@@ -177,43 +423,42 @@ const styles = StyleSheet.create({
     borderRadius: 5,
 
     elevation: 2,
-  }, userInfoSection: {
+  },
+  userInfoSection: {
     paddingLeft: 20,
   },
   header: {
-
     justifyContent: 'center',
     // alignItems: 'center',
 
     paddingVertical: 0,
     paddingHorizontal: 0,
     backgroundColor: '#fff',
-    height: 180
-
+    height: 200,
   },
   title: {
     color: '#85375a',
     fontWeight: 'normal',
-    fontSize: 18
-  }, text: {
+    fontSize: 18,
+  },
+  text: {
     color: 'gray',
-    marginTop: 5
+    marginTop: 5,
   },
   button: {
     alignItems: 'flex-end',
-    marginTop: 30
-  }, footer: {
-    marginTop: 20,
-    flex: 1,
-    backgroundColor: 'white',
-
-    paddingHorizontal: 10,
-    // paddingVertical: 30,
-    height: 500
-
-  }, container: {
-
+    marginTop: 30,
   },
+  // footer: {
+  //   marginTop: 20,
+  //   flex: 1,
+  //   backgroundColor: 'white',
+
+  //   paddingHorizontal: 10,
+  //   // paddingVertical: 30,
+  //   height: 500,
+  // },
+  container: {},
   title: {
     fontSize: 16,
     color: '#000',
@@ -231,40 +476,56 @@ const styles = StyleSheet.create({
   photo: {
     height: 50,
     width: 50,
-  }, buttonText: {
+  },
+  buttonText: {
     fontSize: 18,
     fontFamily: 'Gill Sans',
     textAlign: 'center',
     margin: 13,
     color: '#ffffff',
     backgroundColor: 'transparent',
-  }, circleGradient: {
+  },
+  circleGradient: {
     margin: 1,
-    backgroundColor: "white",
-    borderRadius: 5
-  }, linearGradient: {
-
+    backgroundColor: 'white',
+    borderRadius: 5,
+  },
+  linearGradient: {
     paddingLeft: 15,
     paddingRight: 15,
     borderRadius: 25,
     marginBottom: 20,
     elevation: 3,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: {width: 0, height: 3},
     shadowOpacity: 0.7,
     shadowRadius: 8,
-  }, triangleCorner: {
+  },
+  triangleCorner: {
     // position: 'absolute',
     width: 0,
     height: 0,
     backgroundColor: 'transparent',
     borderStyle: 'solid',
-    zIndex: -1,
-    borderRightWidth: 600,
+    // zIndex: -1,
+    // borderRightWidth: 600,
     borderTopWidth: 170,
     borderRightColor: 'transparent',
-    borderTopColor: '#3B7457'
-  }
+    borderTopColor: '#3B7457',
+  },
+  footer: {
+    flex: 2,
+    backgroundColor: 'white',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
 
-
+    paddingVertical: 20,
+    padding: 20,
+    //  paddingHorizontal: 20
+  },
+  // header: {
+  //   flex: 1,
+  //   // justifyContent: 'center',
+  //   // alignItems: 'center',
+  // },
 });

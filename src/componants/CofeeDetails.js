@@ -4,7 +4,6 @@ import {
   View,
   SafeAreaView,
   ImageBackground,
-  Button,
   TouchableOpacity,
   StyleSheet,
   Image,
@@ -25,6 +24,7 @@ import Database from '../Database';
 import {TagSelect} from 'react-native-tag-select';
 import * as Animatable from 'react-native-animatable';
 import SwitchSelector from 'react-native-switch-selector';
+import {Button} from 'react-native-elements';
 import {
   BallIndicator,
   BarIndicator,
@@ -70,6 +70,7 @@ export class CofeeDetails extends Component {
       addExtra_val: '',
       options: [{label: 'Small', value: '0'}],
       data: [],
+      emptyCartButton: true,
     };
     db.initDB().then((result) => {
       this.loadDbVarable(result);
@@ -149,15 +150,17 @@ export class CofeeDetails extends Component {
               data: addExtra,
               _coffeeAditionValue: 1,
               sml_val: smallPrice,
+              emptyCartButton: false,
             },
             function () {},
           );
         } else {
-          console.log(responseJson.price);
+
           this.setState(
             {
               isLoading: false,
               sml_val: responseJson.price,
+              emptyCartButton: false,
             },
             function () {},
           );
@@ -488,7 +491,7 @@ export class CofeeDetails extends Component {
                 marginHorizontal: 30,
                 top: -25,
               }}>
-              <Avatar
+              {/* <Avatar
                 rounded
                 size={48}
                 containerStyle={{
@@ -506,7 +509,7 @@ export class CofeeDetails extends Component {
                   size={25}
                   style={{color: 'gray', padding: 11}}
                 />
-              </Avatar>
+              </Avatar> */}
             </View>
           </View>
 
@@ -610,7 +613,7 @@ export class CofeeDetails extends Component {
                         color: 'red',
                         marginTop: -2,
                       }}>
-                      ${' '}
+                      A${' '}
                       {(this.state.addextra_total +
                         parseFloat(this.state.sml_val)) *
                         parseFloat(this.state._qty)}
@@ -654,26 +657,41 @@ export class CofeeDetails extends Component {
             </ScrollView>
             <View
               style={{
-                alignItems: 'flex-end',
+           
                 backgroundColor: 'white',
-                borderRadius: 20,
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
               }}>
-              <View style={{padding: 10, flexDirection: 'row'}}>
-                <TouchableOpacity
-                  style={styles.buttongeart}
-                  onPress={() => this.props.navigation.navigate('WishList')}>
-                  <Icon
-                    name="heart-outline"
-                    size={25}
-                    style={{color: '#00897b', padding: 0}}
-                  />
-                </TouchableOpacity>
+              <View style={{padding: 10, }}>
+              
 
-                <TouchableOpacity
+                <Button
+                  // loading={loading}
+                  title="Make Order"
+                  activeOpacity={0.5}
+                  disabled={this.state.emptyCartButton}
+                  titleStyle={{color: 'white'}}
+                  buttonStyle={
+                    (styles.submitText,
+                    {
+                      backgroundColor: '#00897b',
+                      borderRadius: 15,
+                      width: '100%',
+                      borderColor: 'white',
+                      color: '#ccc',
+                      padding: 15,
+                      borderWidth: 1,
+                      // paddingHorizontal: 130,
+                    })
+                  }
+                  onPress={this.addToCart}
+                />
+
+                {/* <TouchableOpacity
                   style={styles.buttonstyle}
                   onPress={this.addToCart}>
                   <Text style={{color: 'white'}}>Make Order</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </View>
           </Animatable.View>
@@ -764,7 +782,8 @@ const styles = StyleSheet.create({
   buttonstyle: {
     backgroundColor: '#00897b',
     borderRadius: 15,
-    width: '78%',
+    // width: '78%',
+    width: '100%',
     padding: 0,
     height: 55,
     alignItems: 'center',

@@ -15,12 +15,13 @@ import {
 } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import {List, ListItem, Left, Body, Right} from 'native-base';
-import {Icon, Avatar,Button} from 'react-native-elements';
+import {Icon, Avatar} from 'react-native-elements';
 import {FlatList} from 'react-native-gesture-handler';
 import * as Animatable from 'react-native-animatable';
 import Database from '../Database';
 import {StatusBar} from 'react-native';
 import {parse} from 'react-native-svg';
+import {Button} from 'react-native-elements';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SCLAlert, SCLAlertButton} from 'react-native-scl-alert';
@@ -110,7 +111,6 @@ export class Cart extends PureComponent {
       _payment_method: 'Cash',
       _subtitle: 'default',
       pressed: false,
-      emptyCartButton: false,
       tokens: '',
     };
     db.initDB().then((result) => {
@@ -177,31 +177,25 @@ export class Cart extends PureComponent {
     db.listCartData(this.state.dbs)
       .then((results) => {
         result = results;
-        if (result == 0) {
-          this.setState({
-            isLoading: false,
-            emptyCartButton: true,
-          });
-        } else {
-          var jsonTextValues = [];
-          result.map((item, index) => {
-            jsonTextValues.push({
-              label: item.pId,
-              value: item.pName,
-            });
-          });
 
-          for (var i = 0; i < result.length; i++) {
-            pPrice = result[i].pPrice;
-            total += parseFloat(pPrice);
-          }
-
-          this.setState({
-            isLoading: false,
-            _list_elimination: results,
-            _total: total,
+        var jsonTextValues = [];
+        result.map((item, index) => {
+          jsonTextValues.push({
+            label: item.pId,
+            value: item.pName,
           });
+        });
+
+        for (var i = 0; i < result.length; i++) {
+          pPrice = result[i].pPrice;
+          total += parseFloat(pPrice);
         }
+
+        this.setState({
+          isLoading: false,
+          _list_elimination: results,
+          _total: total,
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -284,33 +278,23 @@ export class Cart extends PureComponent {
     db.listCartItems(this.state.dbs)
       .then((data) => {
         let result = data;
-        if (result == 0) {
-          this.setState({
-            isLoading: false,
-            emptyCartButton: true,
-            _list_elimination: data,
-            _total: total,
-          });
-        } else {
-          for (var i = 0; i < result.length; i++) {
-            pPrice = result[i].pPrice;
-            total += parseFloat(pPrice);
-          }
-          this.setState({
-            isLoading: false,
-            _list_elimination: data,
-            _total: total,
-          });
+
+        for (var i = 0; i < result.length; i++) {
+          pPrice = result[i].pPrice;
+          total += parseFloat(pPrice);
         }
+        this.setState({
+          isLoading: false,
+          _list_elimination: data,
+          _total: total,
+        });
       })
       .catch((err) => {
         console.log(err);
       });
   }
   async componentDidMount() {
-
-  
-   
+    // this.RBSheet.open();
     LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
     const myArray = await AsyncStorage.getItem('cus_id');
@@ -343,6 +327,7 @@ export class Cart extends PureComponent {
           // amount: Math.floor(this.state._total * 100),
           // currency: 'usd',
           // token: this.state.token,
+       
         }),
       },
     )
@@ -357,7 +342,7 @@ export class Cart extends PureComponent {
 
         if (responseJson.status == 'succeeded') {
           this.emptyCartData();
-        } else {
+        }else{
           this.cardDetailsWrong();
         }
       })
@@ -366,6 +351,8 @@ export class Cart extends PureComponent {
         console.error(error);
       });
   };
+
+
 
   // doPayment = async () => {
   //   this.setState({
@@ -411,10 +398,11 @@ export class Cart extends PureComponent {
     this.handleOpen();
   }
 
-  cardDetailsWrong() {
+  cardDetailsWrong(){
     this.handleOpen2();
-  }
 
+  }
+  
   testcartdetails() {
     db.listCartDataTest(this.state.dbs)
       .then((result) => {})
@@ -460,6 +448,8 @@ export class Cart extends PureComponent {
         console.error(error);
       });
   };
+
+
 
   handleCardPayPress = async () => {
     stripe.setOptions({
@@ -520,19 +510,7 @@ export class Cart extends PureComponent {
     //   });
     // console.log('token is ' + JSON.stringify(token))
   };
-  emptyComponent = () => {
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: '#F2F2F2',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text>oops! There's no data here</Text>
-      </View>
-    );
-  };
+
   renderItem = ({item}) => {
     return (
       <Animatable.View animation="flipInX">
@@ -732,6 +710,7 @@ export class Cart extends PureComponent {
   keyExtractor = (item, index) => index.toString();
   render() {
     const {loading, token, success, response} = this.state;
+    const {movies} = this.state;
 
     if (success == true) {
     }
@@ -831,8 +810,7 @@ export class Cart extends PureComponent {
                 style={styles.field}
                 disabled={false}
                 onParamsChange={this.handleFieldParamsChange}
-                editable={false}
-                selectTextOnFocus={false}
+                editable={false} selectTextOnFocus={false}
               />
               {this.state.indicatorShow == true ? (
                 <ActivityIndicator
@@ -896,8 +874,7 @@ export class Cart extends PureComponent {
               <View
                 style={{
                   backgroundColor: 'white',
-                  borderTopLeftRadius: 20,
-                  borderTopRightRadius: 20,
+                  borderRadius: 20,
                 }}>
                 <View style={{padding: 10, flexDirection: 'row'}}>
                   <View style={{flexDirection: 'column', width: 120}}>
@@ -916,32 +893,17 @@ export class Cart extends PureComponent {
                         fontWeight: 'bold',
                         fontSize: 18,
                       }}>
-                      A$ {Math.floor(this.state._total * 100) / 100}
+                      US $ {Math.floor(this.state._total * 100) / 100}
                     </Text>
                   </View>
 
                   {token == null ? (
-                    <Button
-                      // loading={loading}
-                      title="Check out"
-                      activeOpacity={0.5}
-                      disabled={this.state.emptyCartButton}
-                      titleStyle={{color: 'white'}}
-                      buttonStyle={
-                        (styles.submitText,
-                        {
-                          backgroundColor: '#00897b',
-                          borderRadius: 15,
-                          width: '89%',
-                          borderColor: 'white',
-                          color: '#ccc',
-                          padding: 15,
-                          borderWidth: 1,
-                          paddingHorizontal: 82,
-                        })
-                      }
-                      onPress={() => this.setRbsheet_height()}
-                    />
+                    <TouchableOpacity
+                      style={styles.buttonstyle}
+                      loading={loading}
+                      onPress={() => this.setRbsheet_height()}>
+                      <Text style={{color: 'white'}}>Check out</Text>
+                    </TouchableOpacity>
                   ) : (
                     <View>
                       {token && (

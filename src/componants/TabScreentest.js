@@ -203,7 +203,7 @@ export class TabScreentest extends Component {
                 <View style={{flexDirection: 'row', justifyContent: 'space-between',paddingRight: 10,}}>
                   <Text style={{fontSize: 15}}>{item.details[i]['name']}</Text>
                   <Text style={{fontSize: 17, fontWeight: 'bold'}}>
-                    $ {item.details[i]['price']}
+                    A$ {item.details[i]['price']}
                   </Text>
                 </View>
 

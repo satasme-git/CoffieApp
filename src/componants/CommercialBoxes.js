@@ -40,7 +40,6 @@ import stripe from 'tipsi-stripe';
 import AsyncStorage from '@react-native-community/async-storage';
 import UIStepper from 'react-native-ui-stepper';
 
-import {TagSelect} from 'react-native-tag-select';
 
 import SwitchSelector from 'react-native-switch-selector';
 import Database from '../Database';
@@ -49,7 +48,7 @@ stripe.setOptions({
   publishableKey: 'pk_test_Wim6Z9pN58qzMYDDXvsPMrR0',
 });
 
-export default class BoxessFree extends Component {
+export  class CommercialBoxes extends Component {
   static title = 'Card Form';
 
   state = {
@@ -417,7 +416,7 @@ export default class BoxessFree extends Component {
                         color: 'red',
                         marginTop: -2,
                       }}>
-                      ${' '}
+                      A${' '}
                       {Math.floor(this.state._price * this.state._qty * 100) /
                         100}
      
@@ -456,7 +455,8 @@ export default class BoxessFree extends Component {
               position: 'absolute',
               bottom: 0,
               backgroundColor: 'white',
-              borderRadius: 20,
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
 
             }}>
             <View

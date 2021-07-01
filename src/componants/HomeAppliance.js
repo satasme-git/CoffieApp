@@ -49,7 +49,7 @@ stripe.setOptions({
   publishableKey: 'pk_test_Wim6Z9pN58qzMYDDXvsPMrR0',
 });
 
-export default class HomeAppliance extends Component {
+export  class HomeAppliance extends Component {
   static title = 'Card Form';
 
   state = {
@@ -419,7 +419,7 @@ export default class HomeAppliance extends Component {
                         color: 'red',
                         marginTop: -2,
                       }}>
-                      ${' '}
+                      A${' '}
                       {Math.floor(this.state._price * this.state._qty * 100) /
                         100}
                       {/* {this.state._price *
@@ -459,7 +459,8 @@ export default class HomeAppliance extends Component {
               position: 'absolute',
               bottom: 0,
               backgroundColor: 'white',
-              borderRadius: 20,
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
 
             }}>
             <View

@@ -9,6 +9,7 @@ import {
   ScrollView,
   StyleSheet,
   Image,
+  Alert,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
@@ -18,7 +19,9 @@ import {CustomHeader} from '../index';
 import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
+import {SCLAlert, SCLAlertButton} from 'react-native-scl-alert';
 export class SignIn extends Component {
+  
   constructor(props) {
     super(props);
 
@@ -27,6 +30,8 @@ export class SignIn extends Component {
       TextInputPassword: '',
     };
   }
+
+
   InputUsers = () => {
     const {TextInputEmail} = this.state;
     const {TextInputPassword} = this.state;
@@ -53,16 +58,42 @@ export class SignIn extends Component {
         //     // In this block you can do something with new state.
         // });
 
+       
+        var logimsg = responseJson.msg;
         if (responseJson.id != undefined) {
           AsyncStorage.setItem('cus_id', '' + responseJson.id).then(
             (responseJson) => {
               AsyncStorage.getItem('menu').then((value) => {
                 if (value == 1) {
+                  Alert.alert(
+                    'Success', 'You are successfully logged', [
+                    {text: 'OK'},
+                  ]);
                   this.props.navigation.navigate('CofeeDetails');
                 } else {
+                  //  this.props.navigation.navigate('wherehouse');
+
+                  //  showMessage({
+                  //   message: 'Login success',
+                  //   description:  logimsg,
+                  //   backgroundColor: 'green',
+                  // });
+                  // Alert.alert("Login success");
+                  // Alert.alert('Alert Title', 'My Alert Msg', [
+                  //   {
+                  //     text: 'Cancel',
+                  //     onPress: () => console.log('Cancel Pressed'),
+                  //     style: 'cancel',
+                  //   },
+                  //   {text: 'OK', onPress: () => console.log('OK Pressed')},
+                  // ]);
+                  Alert.alert(
+                    'Sussess', 'You are successfully logged', [
+                    {text: 'OK', onPress: () => console.log('OK Pressed')},
+                  ]);
                   this.props.navigation.navigate('wherehouse');
+           
                 }
-               
               });
 
               // if(value==1){
@@ -77,7 +108,7 @@ export class SignIn extends Component {
         } else {
           showMessage({
             message: 'Login Fail',
-            description: 'Username or password incorrect',
+            description: responseJson.msg,
             backgroundColor: 'red',
           });
         }
@@ -90,6 +121,7 @@ export class SignIn extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <FlashMessage duration={1000} />
+       
         <StatusBar
           barStyle="light-content"
           hidden={false}
@@ -104,6 +136,7 @@ export class SignIn extends Component {
             paddingTop: 10,
             paddingEnd: 20,
           }}>
+        
           <Button
             title="Skip"
             type="outline"
@@ -122,6 +155,7 @@ export class SignIn extends Component {
             }
             onPress={() => this.props.navigation.navigate('drawer')}
           />
+        
         </View>
         <LinearGradient colors={['#3B7457', '#3B7457']} style={styles.gradient}>
           {/* <CustomHeader title="" isHome={false} bdcolor='#00897b' navigation={this.props.navigation} /> */}
@@ -136,6 +170,7 @@ export class SignIn extends Component {
                 paddingVertical: 0,
               }}>
               <View style={{flex: 1, justifyContent: 'center'}}>
+            
                 <Text
                   style={{
                     fontSize: 26,

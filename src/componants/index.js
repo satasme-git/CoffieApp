@@ -28,4 +28,8 @@ export * from './BoxessFree';
 export * from './BoxesCart';
 export * from './CommercialBoxes';
 export * from './HomeAppliance';
+export * from './OrderHistory';
+export * from './BoxOrders';
+
+
 

@@ -11,7 +11,7 @@ import {
   ScrollView,
   TextInput,
   Dimensions,
-  LogBox
+  LogBox,
 } from 'react-native';
 import Swiper from 'react-native-web-swiper';
 import {
@@ -556,18 +556,18 @@ export class MainHome extends Component {
                 showsHorizontalScrollIndicator={false}
                 nestedScrollEnabled={true}
                 contentInsetAdjustmentBehavior="automatic"> */}
-                <FlatList
-                  horizontal
-                  contentContainerStyle={{
-                    paddingTop: StatusBar.currentHeight || 0,
-                  }}
-                  ListEmptyComponent={this.emptyComponent}
-                  scrollEnabled={true}
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={this.keyExtractor}
-                  data={this.state.data}
-                  renderItem={this.renderItem}
-                />
+              <FlatList
+                horizontal
+                contentContainerStyle={{
+                  paddingTop: StatusBar.currentHeight || 0,
+                }}
+                ListEmptyComponent={this.emptyComponent}
+                scrollEnabled={true}
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={this.keyExtractor}
+                data={this.state.data}
+                renderItem={this.renderItem}
+              />
               {/* </ScrollView> */}
               <Text
                 style={{
@@ -606,11 +606,13 @@ export class MainHome extends Component {
                     <Star score={4.7} style={starStyle} />
                     <Text
                       style={{color: 'red', fontWeight: 'bold', fontSize: 16}}>
-                      $ 4
+                      A$ 4
                     </Text>
                   </View>
                 </View>
               </View>
+             
+            
             </View>
             {/* <Button title="Show dialog" onPress={() => this.showDialog()} /> */}
           </View>
@@ -620,61 +622,61 @@ export class MainHome extends Component {
               visible={this.state.visible}
               cancelLabel={'CAncel'}
               onCancel={() => this.setState({visible: false})}
-            //  width={'100%'}
-              >
+              //  width={'100%'}
+            >
               {/* <View> */}
-                {/* <View> */}
-                  <View style={[styles.container1,{width:310}]}>
-                    <Card style={[styles.card1, {backgroundColor: '#00897b'}]}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.handleCancel();
-                          this.props.navigation.navigate('BoxessFree');
-                        }}>
-                        <View style={{alignItems: 'center'}}>
-                          <View style={{height: 10, padding: 5}}>
-                            <Text style={{color: 'white'}}>Residential</Text>
-                            <Text style={{color: 'white'}}>Boxes</Text>
-                          </View>
+              {/* <View> */}
+              <View style={[styles.container1, {width: 310}]}>
+                <Card style={[styles.card1, {backgroundColor: '#00897b'}]}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.handleCancel();
+                      this.props.navigation.navigate('BoxessFree');
+                    }}>
+                    <View style={{alignItems: 'center'}}>
+                      <View style={{height: 10, padding: 5}}>
+                        <Text style={{color: 'white'}}>Residential</Text>
+                        <Text style={{color: 'white'}}>Boxes</Text>
+                      </View>
 
-                          <Text style={{marginTop: 0, fontSize: 12}}> </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </Card>
-                    <Card style={[styles.card1, {backgroundColor: '#c1295c'}]}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.handleCancel();
-                          this.props.navigation.navigate('Commercial Boxes');
-                        }}>
-                        <View style={{alignItems: 'center'}}>
-                          <View style={{height: 10, padding: 5}}>
-                            <Text style={{color: 'white'}}>Commercial</Text>
-                            <Text style={{color: 'white'}}>Boxes</Text>
-                          </View>
+                      <Text style={{marginTop: 0, fontSize: 12}}> </Text>
+                    </View>
+                  </TouchableOpacity>
+                </Card>
+                <Card style={[styles.card1, {backgroundColor: '#c1295c'}]}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.handleCancel();
+                      this.props.navigation.navigate('CommercialBoxes');
+                    }}>
+                    <View style={{alignItems: 'center'}}>
+                      <View style={{height: 10, padding: 5}}>
+                        <Text style={{color: 'white'}}>Commercial</Text>
+                        <Text style={{color: 'white'}}>Boxes</Text>
+                      </View>
 
-                          <Text style={{marginTop: 0, fontSize: 12}}> </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </Card>
-                    <Card style={[styles.card1, {backgroundColor: '#009ae4'}]}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.handleCancel();
-                          this.props.navigation.navigate('Home Appliance');
-                        }}>
-                        <View style={{alignItems: 'center'}}>
-                          <View style={{height: 10, padding: 5}}>
-                            <Text style={{color: 'white'}}>Home </Text>
-                            <Text style={{color: 'white'}}>Appliance</Text>
-                          </View>
+                      <Text style={{marginTop: 0, fontSize: 12}}> </Text>
+                    </View>
+                  </TouchableOpacity>
+                </Card>
+                <Card style={[styles.card1, {backgroundColor: '#009ae4'}]}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.handleCancel();
+                      this.props.navigation.navigate('HomeAppliance');
+                    }}>
+                    <View style={{alignItems: 'center'}}>
+                      <View style={{height: 10, padding: 5}}>
+                        <Text style={{color: 'white'}}>Home </Text>
+                        <Text style={{color: 'white'}}>Appliance</Text>
+                      </View>
 
-                          <Text style={{marginTop: 0, fontSize: 12}}> </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </Card>
-                  </View>
-                {/* </View>
+                      <Text style={{marginTop: 0, fontSize: 12}}> </Text>
+                    </View>
+                  </TouchableOpacity>
+                </Card>
+              </View>
+              {/* </View>
               </View> */}
               {/* <Text style={styles.dialogText}>
     Let Google help apps determine location. This means sending anonymous

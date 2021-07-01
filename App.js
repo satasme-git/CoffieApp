@@ -1,5 +1,12 @@
 import * as React from 'react';
-import {Button, Text, View, TouchableOpacity, LogBox,Image} from 'react-native';
+import {
+  Button,
+  Text,
+  View,
+  TouchableOpacity,
+  LogBox,
+  Image,
+} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
@@ -38,25 +45,24 @@ import {
   CardFormScreen,
   WishList,
   Events,
-  
   BoxesCart,
-  
-
-
+  OrderHistory,
+  BoxOrders,
+  CommercialBoxes,
+  HomeAppliance,
+  BoxessFree
 } from './src/componants';
 
 import {CartComponant} from './src';
 import {CustomDrawerContent} from './src';
-import BoxessFree from './src/componants/BoxessFree';
-import CommercialBoxes from './src/componants/CommercialBoxes';
-import HomeAppliance from './src/componants/HomeAppliance';
+
 
 
 
 const AuthStack = createStackNavigator();
 const Tabs = createMaterialBottomTabNavigator();
 const HomeStack = createStackNavigator();
-const ProfileStack = createStackNavigator();
+
 const SearchStack = createStackNavigator();
 const StackApp = createStackNavigator();
 const MenuStack = createStackNavigator();
@@ -70,26 +76,25 @@ function TabNavigator() {
   //   headerShown:true
   // }}
   return (
-   
     <Tab.Navigator
-    tabBarOptions={{
-      labelStyle: { fontSize: 12 },
-      tabStyle: { width: 100 },
-      style: { backgroundColor: 'green' },
-    }}
+      tabBarOptions={{
+        labelStyle: {fontSize: 12},
+        tabStyle: {width: 100},
+        style: {backgroundColor: 'green'},
+      }}
       screenOptions={({route}) => ({
-        headerShown:true
+        headerShown: true,
         // tabBarLabel: ({focused, color, size}) => {
-          // let iconName;
+        // let iconName;
 
-          // if (route.name === 'Home') {
-          //   iconName = focused ? IMAGE.ICON_HOME : IMAGE.ICON_HOME_BLACK;
-          // } else if (route.name === 'Settings') {
-          //   iconName = focused ? IMAGE.ICON_SETTING : IMAGE.ICON_SETTING_BLACK;
-          // }
+        // if (route.name === 'Home') {
+        //   iconName = focused ? IMAGE.ICON_HOME : IMAGE.ICON_HOME_BLACK;
+        // } else if (route.name === 'Settings') {
+        //   iconName = focused ? IMAGE.ICON_SETTING : IMAGE.ICON_SETTING_BLACK;
+        // }
 
-          // You can return any component that you like here!
-         
+        // You can return any component that you like here!
+
         // },
       })}
       // tabBarOptions={{
@@ -141,10 +146,8 @@ const DrawerStackScreen = ({navigation}) => (
     <Drawer.Screen name="BoxessFree" component={BoxessFree} />
     <Drawer.Screen name="CommercialBoxes" component={CommercialBoxes} />
     <Drawer.Screen name="HomeAppliance" component={HomeAppliance} />
-    
+
     {/* <Drawer.Screen name="TabNavigator" component={TabNavigator} /> */}
-    
-    
   </Drawer.Navigator>
 );
 
@@ -207,7 +210,12 @@ const WherehouseScreen = ({navigation}) => (
               name="bars"
               type="font-awesome"
               color="white"
-              iconStyle={{fontSize: 25, fontWeight: 'normal',padding:10,borderRadius:20}}
+              iconStyle={{
+                fontSize: 25,
+                fontWeight: 'normal',
+                padding: 10,
+                borderRadius: 20,
+              }}
               // onPress={() => navigation.openDrawer()}
             />
           </TouchableOpacity>
@@ -217,15 +225,7 @@ const WherehouseScreen = ({navigation}) => (
     />
   </Wherehouse.Navigator>
 );
-const ProfileStackScreen = () => (
-  <ProfileStack.Navigator>
-    <ProfileStack.Screen
-      name="Profile"
-      options={{headerShown: false}}
-      component={Profile}
-    />
-  </ProfileStack.Navigator>
-);
+
 const AboutUsScreen = ({navigation}) => (
   <AboutUss.Navigator>
     <AboutUss.Screen
@@ -268,6 +268,9 @@ const TabsCreen = ({navigation}) => (
     barStyle={{backgroundColor: 'white'}}>
     <Tabs.Screen
       options={{
+        unmountInactiveRoutes: true,
+
+        unmountOnBlur: true,
         tabBarLabel: 'Home',
         tabBarIcon: ({color}) => (
           <MaterialCommunityIcons name="home" color={color} size={26} />
@@ -275,6 +278,7 @@ const TabsCreen = ({navigation}) => (
       }}
       name="wherehouse"
       component={WherehouseScreen}
+      unmountOnBlur={true}
     />
     {/* <Tabs.Screen
       options={{
@@ -286,17 +290,33 @@ const TabsCreen = ({navigation}) => (
       name="Home" component={HomeStackScreen} /> */}
     <Tabs.Screen
       options={{
+        unmountOnBlur: true,
         tabBarLabel: 'Profile',
         tabBarIcon: ({color}) => (
           <MaterialCommunityIcons name="account" color={color} size={26} />
         ),
       }}
       name="Profile"
-      component={ProfileStackScreen}
-      onPress={() => navigation.openDrawer()}
+      component={Profile}
+      unmountOnBlur={true}
+      // onPress={() => navigation.openDrawer()}
     />
     <Tabs.Screen
       options={{
+        unmountInactiveRoutes: true,
+        unmountOnBlur: true,
+        tabBarLabel: 'Orders',
+        tabBarIcon: ({color}) => (
+          <MaterialCommunityIcons name="border-all" color={color} size={26} />
+        ),
+      }}
+      name="OrderHistory"
+      component={OrderHistory}
+      unmountOnBlur={true}
+    />
+    <Tabs.Screen
+      options={{
+        unmountOnBlur: true,
         tabBarLabel: 'Loyality Card',
         tabBarIcon: ({color}) => (
           <MaterialCommunityIcons name="credit-card" color={color} size={26} />
@@ -304,6 +324,7 @@ const TabsCreen = ({navigation}) => (
       }}
       name="WhereHouse"
       component={WhereHouse}
+      unmountOnBlur={true}
     />
     {/* <Tabs.Screen
       options={{
@@ -397,8 +418,20 @@ export default function App() {
           component={SignUp}
         />
 
-        <StackApp.Screen name="Boxes Cart"  component={BoxesCart}/>
-  
+        <StackApp.Screen name="Boxes Cart" component={BoxesCart} />
+        {/* <StackApp.Screen name="OrderHistory"  component={OrderHistory}/> */}
+        <StackApp.Screen name="Box Orders"  component={BoxOrders}/>
+        {/* <StackApp.Screen name="Profile"  options={{headerShown: false}} component={Profile}/> */}
+        {/* <StackApp.Screen
+          name="CommercialBoxes"
+          options={{headerShown: false}}
+          component={CommercialBoxes}
+        />
+         <StackApp.Screen
+          name="HomeAppliance"
+          options={{headerShown: false}}
+          component={HomeAppliance}
+        /> */}
       </StackApp.Navigator>
     </NavigationContainer>
   );

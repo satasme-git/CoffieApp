@@ -20,6 +20,7 @@ import {CustomHeader} from '../index';
 import QRCode from 'react-native-qrcode-generator';
 import AsyncStorage from '@react-native-community/async-storage';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
+import {Button} from 'react-native-elements';
 export class SignUp extends Component {
   constructor(props) {
     super(props);
@@ -28,14 +29,14 @@ export class SignUp extends Component {
       TextInputEmail: '',
       TextInputPhone: '',
       TextInputPassword: '',
-     
+
       showAlert: false,
     };
   }
-  
+
   state = {
     text: 'http://facebook.github.io/react-native/',
-    show: true
+    show: true,
   };
   handleClose = () => {
     this.setState({show: false});
@@ -49,9 +50,7 @@ export class SignUp extends Component {
     this.setState({show: true});
   }
 
-  
   InputUsers = () => {
-   
     const {TextInputName} = this.state;
     const {TextInputEmail} = this.state;
     const {TextInputPhone} = this.state;
@@ -81,19 +80,16 @@ export class SignUp extends Component {
 
         let id = responseJson.userid;
 
-       
         // Alert.alert('Register success' );
 
         if (responseJson.userid != undefined) {
           AsyncStorage.setItem('memberNames', TextInputName).then(
             (responseJson) => {
-             
               this.props.navigation.navigate('wherehouse');
             },
           );
           AsyncStorage.setItem('memberId', '' + responseJson.userid);
         } else {
-         
           showMessage({
             message: 'Registration fail Fail',
             description: 'Username or password incorrect',
@@ -108,7 +104,6 @@ export class SignUp extends Component {
   render() {
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
-       
         <StatusBar
           barStyle="dark-content"
           hidden={false}
@@ -120,7 +115,7 @@ export class SignUp extends Component {
           bdcolor="#fff"
           navigation={this.props.navigation}
         />
-          <FlashMessage duration={1000} />
+        <FlashMessage duration={1000} />
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
@@ -257,12 +252,12 @@ export class SignUp extends Component {
                 autoFocus={false}
               />
 
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 activeOpacity={1.0}
                 ref="touchableOpacity"
                 style={{marginTop: 40}}
                 onPress={this.InputUsers}>
-                {/* onPress={() => this.props.navigation.navigate('TestScreen')} */}
+         
                 <LinearGradient
                   colors={['#009984', '#00554D']}
                   start={{x: 0, y: 1}}
@@ -270,7 +265,29 @@ export class SignUp extends Component {
                   style={styles.linearGradient}>
                   <Text style={styles.buttonText}>Sign Up</Text>
                 </LinearGradient>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
+
+              <Button
+                title="Sign Up"
+                activeOpacity={0.5}
+                titleStyle={{color: 'white'}}
+                buttonStyle={
+                  (styles.submitText,
+                  {
+                    backgroundColor: '#00897b',
+                    borderRadius: 15,
+                    width: '100%',
+                    borderColor: 'white',
+                    color: '#ccc',
+                    padding: 15,
+                    borderWidth: 1,
+                    paddingHorizontal: 82,
+                    marginTop:40,
+                  })
+                }
+                onPress={this.InputUsers}
+              />
+
               {/* <TouchableOpacity onPress={() => this.props.navigation.navigate('PeriodCalandar')}>
                    
                         <View style={[{ alignItems: "center", }, styles.touchableopacity]} >

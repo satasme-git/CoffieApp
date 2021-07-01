@@ -5,12 +5,13 @@ import {
   SafeAreaView,
   TouchableOpacity,
   StyleSheet,
-  Modal,
   Image,
   Pressable,
   ScrollView,
   Alert,
-
+  TextInput,
+  ActivityIndicator,
+  StatusBar
 } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import {List, ListItem, Left, Body, Right} from 'native-base';
@@ -18,7 +19,7 @@ import {Icon, Avatar} from 'react-native-elements';
 import {FlatList} from 'react-native-gesture-handler';
 import * as Animatable from 'react-native-animatable';
 import Database from '../Database';
-import {StatusBar} from 'react-native';
+
 import {parse} from 'react-native-svg';
 import {Button} from 'react-native-elements';
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -27,6 +28,9 @@ import {SCLAlert, SCLAlertButton} from 'react-native-scl-alert';
 
 import stripe from 'tipsi-stripe';
 import SwitchSelector from 'react-native-switch-selector';
+import Modal from 'react-native-modal';
+import {PaymentCardTextField} from 'tipsi-stripe';
+import creditCardType from 'credit-card-type';
 const db = new Database();
 
 stripe.setOptions({
@@ -46,17 +50,38 @@ export class BoxesCart extends PureComponent {
     success: null,
     modalVisible: false,
     show: false,
+    show2: false,
     // _alert_heading: 'defaultt',
     _subtitle: '',
+
+    text: '',
+
+    number: '',
+    month: '',
+    year: '',
+    cvc: '',
+    valid: '',
+    name: '',
+
+    errorMsg: '',
+
+    indicatorShow: false,
   };
 
   handleOpen() {
     this.setState({show: true});
   }
-
+  handleOpen2() {
+    this.setState({show2: true});
+  }
   handleClose = () => {
     this.setState({show: false});
     this.props.navigation.navigate('BoxessFree');
+  };
+  handleClose2 = () => {
+    this.setState({show2: false});
+    this.setState({token: null});
+    // this.props.navigation.navigate('TabScreentest');
   };
   setModalVisible = (visible) => {
     this.setState({modalVisible: visible});
@@ -85,12 +110,14 @@ export class BoxesCart extends PureComponent {
     });
     this.loadDbVarable = this.loadDbVarable.bind(this);
   }
+  
   showAlert = () => {
     this.setState({
       showAlert: true,
     });
   };
   changeSML(value) {
+
     var smlval = value;
 
     if (value == 1) {
@@ -108,7 +135,8 @@ export class BoxesCart extends PureComponent {
         _subtitle: 'Thank you! Payment is complete',
         _payment_method: 'Card',
       });
-      this.handleCardPayPress();
+      // this.handleCardPayPress();
+      this.setModalVisible(true);
       this.RBSheet.close();
     }
   }
@@ -236,10 +264,16 @@ export class BoxesCart extends PureComponent {
     
   }
 
+  cardDetailsWrong(){
+    this.handleOpen2();
+
+  }
+
   doPayment = async () => {
     this.setState({
-      pressed:true,
+      pressed: true,
     });
+
     // Use firebase serve for local testing if you don't have a paid firebase account
     fetch(
       'https://us-central1-coffee-app-fb513.cloudfunctions.net/payWithStripe',
@@ -249,32 +283,43 @@ export class BoxesCart extends PureComponent {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        
         body: JSON.stringify({
-          amount: Math.floor(this.state._total) * 100,
+          amount: Math.floor(this.state._total * 100),
           currency: 'aud',
-          token: this.state.tokenId,
-          payment_method_types: ['card'],
+          token: this.state.token,
+
+          // amount: Math.floor(this.state._total * 100),
+          // currency: 'usd',
+          // token: this.state.token,
+       
         }),
       },
     )
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson);
+        // console.log(responseJson);
+
         this.setState({
           success: responseJson.status == 'succeeded' ? true : false,
           response: responseJson,
         });
 
         if (responseJson.status == 'succeeded') {
-
           this.emptyCartData();
+        }else{
+          this.cardDetailsWrong();
         }
       })
       .catch((error) => {
+        this.cardDetailsWrong();
         console.error(error);
       });
   };
+
+
+
+
+
 
   emptyCartData() {
 
@@ -342,32 +387,65 @@ export class BoxesCart extends PureComponent {
   };
 
   handleCardPayPress = async () => {
+    stripe.setOptions({
+      publishableKey: 'pk_live_cVXHeRbbcgl00vzc2kgb6vyy',
+      // androidPayMode: 'live',
+    });
+
+    this.setState({indicatorShow: true});
+    // console.log(this.state.number + '    ' + this.state.month);
+
+    const params = {
+      // mandatory
+
+      // number: '4283980008203799',
+      // expMonth: 8,
+      // expYear: 22,
+      // cvc: '100',
+
+      // optional
+      name: this.state.name,
+      // currency: 'usd',
+      // addressLine1: '123 Test Street',
+      // addressLine2: 'Apt. 5',
+      // addressCity: 'Test City',
+      // addressState: 'Test State',
+      // addressCountry: 'Test Country',
+      // addressZip: '55555',
+
+      number: this.state.number,
+      expMonth: this.state.month,
+      expYear: this.state.year,
+      cvc: this.state.cvc,
+    };
+
     try {
-      const token = await stripe.paymentRequestWithCardForm({
+      // this.setState({loading: true, token: null});
+      const token = await stripe.createTokenWithCard(params);
 
-        requiredBillingAddressFields: 'full',
-        prefilledInformation: {
-          billingAddress: {
-            name: 'Gunilla Haugeh',
-            line1: 'Canary Place',
-            line2: '3',
-            city: 'Macon',
-            state: 'Georgia',
-            country: 'US',
-            postalCode: '31217',
-          },
-        },
-      });
-
+      // this.setState({indicatorShow:false})
+      console.log('token is ' + JSON.stringify(token));
       this.setState({
-        tokenId: token.id,
         loading: false,
-        token,
+        token: token.tokenId,
+        indicatorShow: false,
       });
+      this.setState({errorMsg: ''});
+      this.setModalVisible(false);
     } catch (error) {
-      this.setState({loading: false});
+      // this.setState({loading: false, indicatorShow: false});
+      // console.log(error);
+      // this.setState({errorMsg: "You can't use test cards"});
+      // this.setState({indicatorShow:false})
     }
+
+    //   this.setState({
+    //     loading: false,
+    //     token:token.tokenId,
+    //   });
+    // console.log('token is ' + JSON.stringify(token))
   };
+
 
   renderItem = ({item}) => {
     return (
@@ -508,6 +586,32 @@ export class BoxesCart extends PureComponent {
     );
   };
 
+  handleFieldParamsChange = (valid, params) => {
+    var visaCards = creditCardType(params.number);
+    this.setState({
+      number: params.number,
+      month: params.expMonth,
+      year: params.expYear,
+      cvc: params.cvc,
+      valid: valid,
+    });
+    // console.log(`
+    //   Valid: ${valid}
+    //   Number: ${params.number || '-'}
+    //   Month: ${params.expMonth || '-'}
+    //   Year: ${params.expYear || '-'}
+    //   CVC: ${params.cvc || '-'}
+    //   cardtype: ${visaCards[0].type}
+    // `);
+  };
+
+  isPaymentCardTextFieldFocused = () => this.paymentCardInput.isFocused();
+
+  focusPaymentCardTextField = () => this.paymentCardInput.focus();
+
+  blurPaymentCardTextField = () => this.paymentCardInput.blur();
+
+  resetPaymentCardTextField = () => this.paymentCardInput.setParams({});
   keyExtractor = (item, index) => index.toString();
   render() {
     const {loading, token, success, response} = this.state;
@@ -531,6 +635,17 @@ export class BoxesCart extends PureComponent {
             Done
           </SCLAlertButton>
         </SCLAlert>
+        <SCLAlert
+          theme="danger"
+          show={this.state.show2}
+          title={'Error'}
+          subtitle={'Check Your Card Details'}
+          onRequestClose={this.handleClose2}
+          cancellable={false}>
+          <SCLAlertButton theme="danger" onPress={this.handleClose2}>
+            Done
+          </SCLAlertButton>
+        </SCLAlert>
 
         <StatusBar
           barStyle="dark-content"
@@ -538,6 +653,105 @@ export class BoxesCart extends PureComponent {
           backgroundColor="#fff"
         />
         <View style={{flex: 1}}>
+        <Modal
+            isVisible={this.state.modalVisible}
+            // isVisible={true}
+
+            animationIn={'slideInDown'}
+            avoidKeyboard={false}
+            onBackButtonPress={() => this.setState({modalVisible: false})}
+            // onShow={()=>{this.blurPaymentCardTextField()}}
+          >
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'white',
+                borderRadius: 5,
+                padding: 10,
+              }}>
+              <Text
+                style={{
+                  fontSize: 17,
+                  fontWeight: 'bold',
+                  textAlign: 'left',
+                  paddingVertical: 10,
+                  alignSelf: 'flex-start',
+                }}>
+                Enter Your Card
+              </Text>
+              <Animatable.View
+                easing="ease-in"
+                animation="flipInY"
+                duration={2000}>
+                <Image
+                  source={require('../images/card.png')}
+                  style={{width: 160, height: 120, resizeMode: 'contain'}}
+                />
+              </Animatable.View>
+              {/* <Text style={{alignSelf:'flex-start',padding:5,color:'#787878',fontSize:16}}>Name</Text>
+          <TextInput
+            style={styles.field}
+            onChangeText={(tex)=>this.setState({name:tex})}
+            value={this.state.name}
+            placeholder={'Name'}
+            autoFocus={true}
+            ref={(ref) => { this.FirstInput = ref; }}
+          /> */}
+              <Text
+                style={{
+                  alignSelf: 'flex-start',
+                  padding: 5,
+                  color: '#787878',
+                  fontSize: 16,
+                }}>
+                Card
+              </Text>
+              <PaymentCardTextField
+                ref={(ref) => {
+                  this.paymentCardInput = ref;
+                }}
+                style={styles.field}
+                disabled={false}
+                onParamsChange={this.handleFieldParamsChange}
+                editable={false} selectTextOnFocus={false}
+              />
+              {this.state.indicatorShow == true ? (
+                <ActivityIndicator
+                  style={{padding: 15}}
+                  size="large"
+                  color="#449aeb"
+                />
+              ) : (
+                <Text style={{color: '#d81a1a', fontSize: 16, padding: 5}}>
+                  {this.state.errorMsg}
+                </Text>
+              )}
+
+              <View style={{flexDirection: 'row', alignSelf: 'flex-end'}}>
+                <Text
+                  style={{color: '#1f8aff', fontSize: 16, padding: 5}}
+                  onPress={() => this.setModalVisible(false)}>
+                  Cancel
+                </Text>
+                <Text
+                  style={{
+                    color: this.state.valid == true ? '#1f8aff' : '#a6d1fe',
+                    fontSize: 16,
+                    padding: 5,
+                  }}
+                  onPress={
+                    this.state.valid == true
+                      ? () => this.handleCardPayPress()
+                      : () => {}
+                  }>
+                  Done
+                </Text>
+              </View>
+            </View>
+          </Modal>
+
+
           <View style={{marginLeft: 20, marginTop: 30}}>
             <Text style={{fontSize: 20, fontWeight: 'bold'}}>My Order</Text>
           </View>
@@ -562,7 +776,8 @@ export class BoxesCart extends PureComponent {
               <View
                 style={{
                   backgroundColor: 'white',
-                  borderRadius: 20,
+                  borderTopLeftRadius: 20,
+                  borderTopRightRadius: 20,
                 }}>
                 <View style={{padding: 10, flexDirection: 'row'}}>
                   <View style={{flexDirection: 'column',width:120}}>
@@ -581,7 +796,7 @@ export class BoxesCart extends PureComponent {
                         fontWeight: 'bold',
                         fontSize: 18,
                       }}>
-                      US ${Math.floor(this.state._total*100)/100}
+                      A${Math.floor(this.state._total*100)/100}
                     </Text>
                   </View>
 
@@ -606,7 +821,7 @@ export class BoxesCart extends PureComponent {
                             {
                               backgroundColor: 'red',
                               borderRadius: 15,
-                              width: '100%',
+                              width: '92%',
                               borderColor: 'white',
                               color: '#ccc',
                               padding: 15,
@@ -740,5 +955,14 @@ const styles = StyleSheet.create({
   text: {
     color: '#fff',
     fontSize: 15,
+  }, field: {
+    width: 300,
+    color: '#449aeb',
+    borderColor: '#787878',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingVertical: 5,
+    marginBottom: 10,
+    paddingLeft: 10,
   },
 });
