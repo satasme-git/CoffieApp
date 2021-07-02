@@ -87,7 +87,7 @@ export class BoxOrders extends Component {
           backgroundColor="#3B7457"
         />
          <CustomHeader
-          title=""
+          title="Box Order Histor"
           isHome={false}
           bdcolor="#3B7457"
           bgcolor="#3B7457"

@@ -97,7 +97,7 @@ export class OrderHistory extends Component {
           backgroundColor="#3B7457"
         />
          <CustomHeader
-          title=""
+          title="Order History"
           isHome={true}
           bdcolor="#3B7457"
           bgcolor="#3B7457"

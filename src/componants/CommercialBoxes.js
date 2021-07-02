@@ -62,7 +62,7 @@ export class CommercialBoxes extends Component {
 
   constructor(props) {
     super(props);
-    this.checkToken();
+   
     this.state = {
       isLoading: true,
       box_data: [],
@@ -102,6 +102,7 @@ export class CommercialBoxes extends Component {
     const token = await AsyncStorage.getItem('cus_id');
   
     if (token) {
+      this.addToCart();
     } else {
       this.props.navigation.navigate('SignIn');
     }
@@ -486,7 +487,8 @@ export class CommercialBoxes extends Component {
                     // paddingHorizontal: 130,
                   })
                 }
-                onPress={this.addToCart}
+              
+                onPress={this.checkToken}
               />
             ) : (
               // <TouchableOpacity

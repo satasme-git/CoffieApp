@@ -64,7 +64,7 @@ export  class BoxessFree extends Component {
 
   constructor(props) {
     super(props);
-    this.checkToken();
+   
     this.state = {
       isLoading: true,
       box_data: [],
@@ -98,6 +98,7 @@ export  class BoxessFree extends Component {
     const token = await AsyncStorage.getItem('cus_id');
 
     if (token) {
+      this.addToCart();
     } else {
       this.props.navigation.navigate('SignIn');
     }
@@ -495,7 +496,9 @@ export  class BoxessFree extends Component {
                   // paddingHorizontal: 130,
                 })
               }
-              onPress={this.addToCart}
+              // this.checkToken();
+              
+              onPress={this.checkToken}
             />
 
                 // <TouchableOpacity

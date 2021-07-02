@@ -46,7 +46,7 @@ const sugar = [
 export class CofeeDetails extends Component {
   constructor(props) {
     super(props);
-    this.checkToken();
+  
     this.state = {
       isLoading: true,
       _aaa: 0,
@@ -81,6 +81,7 @@ export class CofeeDetails extends Component {
     const token = await AsyncStorage.getItem('cus_id');
 
     if (token) {
+      this.addToCart();
     } else {
       this.props.navigation.navigate('SignIn');
     }
@@ -113,7 +114,7 @@ export class CofeeDetails extends Component {
         this.setState({
           _aaa: cart_count,
         });
-        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ;dsd adasd a : "+cart_count);
+      
       })
       .catch((err) => {
         console.log(err);
@@ -684,7 +685,8 @@ export class CofeeDetails extends Component {
                       // paddingHorizontal: 130,
                     })
                   }
-                  onPress={this.addToCart}
+                  
+                  onPress={this.checkToken}
                 />
 
                 {/* <TouchableOpacity

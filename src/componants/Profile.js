@@ -10,13 +10,24 @@ import {
   Alert,
 } from 'react-native';
 import {CustomHeader} from '../index';
-import {Avatar,Button} from 'react-native-elements';
+import {Avatar, Button} from 'react-native-elements';
 import QRCode from 'react-native-qrcode-generator';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as Animatable from 'react-native-animatable';
 // import ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 import ImagePicker from 'react-native-image-picker';
+import {
+  BallIndicator,
+  BarIndicator,
+  DotIndicator,
+  MaterialIndicator,
+  PacmanIndicator,
+  PulseIndicator,
+  SkypeIndicator,
+  UIActivityIndicator,
+  WaveIndicator,
+} from 'react-native-indicators';
 // const options = {
 //   title: 'Select Avatar',
 //   takePhotoButtonTitle: 'Take a photo',
@@ -71,7 +82,6 @@ export class Profile extends Component {
       this.getorderBoxCount();
       this.getoprofileDetails();
     });
-   
   }
   componentWillUnmount() {
     // Remove the event listener
@@ -262,200 +272,209 @@ export class Profile extends Component {
       });
   }
   render() {
-    return (
-      <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-        <CustomHeader
-          title=""
-          isHome={true}
-          bdcolor="#3B7457"
-          bgcolor="#3B7457"
-          navigation={this.props.navigation}
-        />
-        {this.state._cus_id != null ? (
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentInsetAdjustmentBehavior="automatic"
-            style={styles.scrollView}>
-            <View style={styles.header}>
-              <View style={{height: 200}}>
-                <View
-                  style={{
-                    backgroundColor: '#3B7457',
-                    height: 240,
-                    zIndex: -1,
-                  }}></View>
-                <View
-                  style={{
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    bottom: 240,
-                  }}>
-                  <Avatar
-                    rounded
-                    showEditButton
-                    size={120}
-                    // source={
-                    //   this.state.imageSource !== null
-                    //     ? this.state.imageSource
-                    //     : require('../images/profiled.png')
-                    // }
+    let {isLoading} = this.state;
+    if (isLoading) {
+      return <BarIndicator color="#3B7457" />;
+    } else {
+      return (
+        <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+          <CustomHeader
+            title=""
+            isHome={true}
+            bdcolor="#3B7457"
+            bgcolor="#3B7457"
+            navigation={this.props.navigation}
+          />
+          {this.state._cus_id != null ? (
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentInsetAdjustmentBehavior="automatic"
+              style={styles.scrollView}>
+              <View style={styles.header}>
+                <View style={{height: 200}}>
+                  <View
+                    style={{
+                      backgroundColor: '#3B7457',
+                      height: 240,
+                      zIndex: -1,
+                    }}></View>
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      bottom: 240,
+                    }}>
+                    <Avatar
+                      rounded
+                      showEditButton
+                      size={120}
+                      // source={
+                      //   this.state.imageSource !== null
+                      //     ? this.state.imageSource
+                      //     : require('../images/profiled.png')
+                      // }
 
-                    source={
-                      this.state.abc != ''
-                        ? {
-                            uri:
-                              'https://satasmemiy.tk/images/Customer/' +
-                              this.state.abc,
-                          }
-                        : this.state.imageSource !== null
-                        ? this.state.imageSource
-                        : require('../images/profiled.png')
-                    }
-                    containerStyle={{
-                      margin: 10,
-                      shadowColor: 'rgba(0,0,0, .4)', // IOS
-                      shadowOffset: {height: 3, width: 8},
-                      borderWidth: 6,
-                      borderColor: 'white', // IOS
-                      shadowOpacity: 3, // IOS
-                      shadowRadius: 5,
-                      elevation: 8,
-                    }}
-                    onEditPress={() => console.log('edit button pressed')}
-                    onLongPress={() => console.log('component long pressed')}
-                    // onPress={() => this.props.navigation.navigate('ProfileImageView')}
-                    editButton={{
-                      name: 'edit',
-                    }}
-                    onPress={() => this.selectPhoto()}
-                    // showAccessory
-                    // onAccessoryPress={() => this.selectPhoto()}
-                    // accessory={{ size: 33, style: { backgroundColor: 'gray', height: 45, paddingTop: 3, width: 45, borderRadius: 25, alignItems: 'center', alignContent: 'center' } }}
-                  />
+                      source={
+                        this.state.abc != ''
+                          ? {
+                              uri:
+                                'https://satasmemiy.tk/images/Customer/' +
+                                this.state.abc,
+                            }
+                          : this.state.imageSource !== null
+                          ? this.state.imageSource
+                          : require('../images/profiled.png')
+                      }
+                      containerStyle={{
+                        margin: 10,
+                        shadowColor: 'rgba(0,0,0, .4)', // IOS
+                        shadowOffset: {height: 3, width: 8},
+                        borderWidth: 6,
+                        borderColor: 'white', // IOS
+                        shadowOpacity: 3, // IOS
+                        shadowRadius: 5,
+                        elevation: 8,
+                      }}
+                      onEditPress={() => console.log('edit button pressed')}
+                      onLongPress={() => console.log('component long pressed')}
+                      // onPress={() => this.props.navigation.navigate('ProfileImageView')}
+                      editButton={{
+                        name: 'edit',
+                      }}
+                      onPress={() => this.selectPhoto()}
+                      // showAccessory
+                      // onAccessoryPress={() => this.selectPhoto()}
+                      // accessory={{ size: 33, style: { backgroundColor: 'gray', height: 45, paddingTop: 3, width: 45, borderRadius: 25, alignItems: 'center', alignContent: 'center' } }}
+                    />
 
-                  <Text
-                    style={{fontSize: 22, fontWeight: 'bold', color: 'white'}}>
-                    {this.state._name}
-                  </Text>
-                  <Text style={{color: 'white'}}>{this.state._email}</Text>
+                    <Text
+                      style={{
+                        fontSize: 22,
+                        fontWeight: 'bold',
+                        color: 'white',
+                      }}>
+                      {this.state._name}
+                    </Text>
+                    <Text style={{color: 'white'}}>{this.state._email}</Text>
+                  </View>
                 </View>
               </View>
-            </View>
 
-            <Animatable.View style={styles.footer} animation="fadeInUpBig">
-              <View style={{height: 500}}>
-                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+              <Animatable.View style={styles.footer} animation="fadeInUpBig">
+                <View style={{height: 500}}>
                   <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      paddingHorizontal: 40,
-                    }}>
-                    <Text
+                    style={{flexDirection: 'row', justifyContent: 'center'}}>
+                    <View
                       style={{
-                        fontSize: 35,
-                        fontWeight: 'bold',
-                        color: '#3B7457',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingHorizontal: 40,
                       }}>
-                      {this.state._orderCount != null
-                        ? this.state._orderCount
-                        : 0}
-                    </Text>
-                    <Text style={{fontSize: 16, marginTop: -10}}>Orders</Text>
-                  </View>
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      paddingHorizontal: 40,
-                    }}>
-                    <Text
-                      style={{fontSize: 45, fontWeight: 'bold', color: '#3B7457'}}>
-                      {this.state._points != null ? this.state._points : 0}
-                    </Text>
-                    <Text style={{fontSize: 16, marginTop: -10}}>Points</Text>
-                  </View>
-                  <View
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      paddingHorizontal: 40,
-                    }}>
-                    <Text
+                      <Text
+                        style={{
+                          fontSize: 35,
+                          fontWeight: 'bold',
+                          color: '#3B7457',
+                        }}>
+                        {this.state._orderCount != null
+                          ? this.state._orderCount
+                          : 0}
+                      </Text>
+                      <Text style={{fontSize: 16, marginTop: -10}}>Orders</Text>
+                    </View>
+                    <View
                       style={{
-                        fontSize: 35,
-                        fontWeight: 'bold',
-                        color: '#3B7457',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingHorizontal: 40,
                       }}>
-                      {this.state._orderboxCount != null
-                        ? this.state._orderboxCount
-                        : 0}
-                    </Text>
-                    <Text style={{fontSize: 16, marginTop: -10}}>
-                      Box Orders
-                    </Text>
+                      <Text
+                        style={{
+                          fontSize: 45,
+                          fontWeight: 'bold',
+                          color: '#3B7457',
+                        }}>
+                        {this.state._points != null ? this.state._points : 0}
+                      </Text>
+                      <Text style={{fontSize: 16, marginTop: -10}}>Points</Text>
+                    </View>
+                    <View
+                      style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingHorizontal: 40,
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 35,
+                          fontWeight: 'bold',
+                          color: '#3B7457',
+                        }}>
+                        {this.state._orderboxCount != null
+                          ? this.state._orderboxCount
+                          : 0}
+                      </Text>
+                      <Text style={{fontSize: 16, marginTop: -10}}>
+                        Box Orders
+                      </Text>
+                    </View>
                   </View>
-                </View>
-                <View
-                  style={{
-                    paddingTop: 30,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <QRCode
-                    value={'' + this.state._mobile_no}
-                    size={200}
-                    bgColor="black"
-                    fgColor="white"
-                  />
+                  <View
+                    style={{
+                      paddingTop: 30,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <QRCode
+                      value={'' + this.state._mobile_no}
+                      size={200}
+                      bgColor="black"
+                      fgColor="white"
+                    />
 
-                  {/* <TouchableOpacity
+                    {/* <TouchableOpacity
                   style={{marginTop: 20}}
                   onPress={() => this.selectPhoto()}>
                   <Text>refresh</Text>
                 </TouchableOpacity> */}
+                  </View>
                 </View>
-              </View>
-            </Animatable.View>
-          </ScrollView>
-        ) : (
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: 100,
-            }}>
-              
-            <Text>Please login</Text>
-            <Button
-           
-              title="Login"
-              activeOpacity={0.5}
-             
-              titleStyle={{color: 'white'}}
-              buttonStyle={
-                (styles.submitText,
-                {
-                  backgroundColor: 'red',
-                  borderRadius: 5,
-                  // width: '100%',
-                  borderColor: 'white',
-                  color: '#ccc',
-                  padding: 5,
-                  borderWidth: 1,
-                  paddingHorizontal: 20,
-                  marginTop:10,
-                })
-              }
-              
-              onPress={()=>this.props.navigation.navigate('SignIn')}
-            />
-
-          </View>
-        )}
-      </SafeAreaView>
-    );
+              </Animatable.View>
+            </ScrollView>
+          ) : (
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 100,
+              }}>
+              <Text>Please login</Text>
+              <Button
+                title="Login"
+                activeOpacity={0.5}
+                titleStyle={{color: 'white'}}
+                buttonStyle={
+                  (styles.submitText,
+                  {
+                    backgroundColor: 'red',
+                    borderRadius: 5,
+                    // width: '100%',
+                    borderColor: 'white',
+                    color: '#ccc',
+                    padding: 5,
+                    borderWidth: 1,
+                    paddingHorizontal: 20,
+                    marginTop: 10,
+                  })
+                }
+                onPress={() => this.props.navigation.navigate('SignIn')}
+              />
+            </View>
+          )}
+        </SafeAreaView>
+      );
+    }
   }
 }
 
