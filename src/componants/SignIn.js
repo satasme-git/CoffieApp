@@ -133,8 +133,9 @@ export class SignIn extends Component {
             color: 'white',
             backgroundColor: '#3B7457',
             alignItems: 'flex-end',
-            paddingTop: 10,
+            paddingTop: 5,
             paddingEnd: 20,
+            paddingBottom:5
           }}>
         
           <Button
@@ -142,7 +143,7 @@ export class SignIn extends Component {
             type="outline"
             titleStyle={{color: 'white', fontWeight: 'normal', fontSize: 14}}
             buttonStyle={
-              (styles.submitText,
+              (
               {
                 borderRadius: 25,
                 width: 80,
@@ -157,7 +158,7 @@ export class SignIn extends Component {
           />
         
         </View>
-        <LinearGradient colors={['#3B7457', '#3B7457']} style={styles.gradient}>
+        <LinearGradient colors={['#F2F2F2', '#F2F2F2']} style={styles.gradient}>
           {/* <CustomHeader title="" isHome={false} bdcolor='#00897b' navigation={this.props.navigation} /> */}
           <ScrollView
             contentInsetAdjustmentBehavior="automatic"
@@ -176,11 +177,11 @@ export class SignIn extends Component {
                     fontSize: 26,
                     fontWeight: 'bold',
                     marginTop: 15,
-                    color: '#fff',
+                    color: 'black',
                   }}>
                   Welcome{' '}
                 </Text>
-                <Text style={{fontSize: 14, color: '#fff', marginBottom: 25}}>
+                <Text style={{fontSize: 14, color: 'gray', marginBottom: 25}}>
                   Use email to Login
                 </Text>
               </View>
@@ -213,10 +214,10 @@ export class SignIn extends Component {
                   style={{
                     alignItems: 'center',
                     flexDirection: 'row',
-                    borderColor: 'gray',
+                    borderColor: 'black',
                     borderWidth: 0.5,
                     borderRadius: 25,
-                    backgroundColor: '#F2F2F2',
+                    backgroundColor: 'white',
                     paddingLeft: 10,
                   }}>
                   <Icon
@@ -248,10 +249,10 @@ export class SignIn extends Component {
                   style={{
                     alignItems: 'center',
                     flexDirection: 'row',
-                    borderColor: 'gray',
+                    borderColor: 'black',
                     borderWidth: 0.5,
                     borderRadius: 25,
-                    backgroundColor: '#F2F2F2',
+                    backgroundColor: 'white',
                     paddingLeft: 10,
                   }}>
                   <Icon
@@ -285,13 +286,13 @@ export class SignIn extends Component {
                 </LinearGradient>
               </TouchableOpacity> */}
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                  <Text style={{paddingVertical: 25, color: '#fff'}}>
-                    Don't have account?
+                  <Text style={{paddingVertical: 25, color: 'black'}}>
+                    Don't have account? 
                     <Text
-                      style={{color: 'yellow'}}
+                      style={{color: 'gray'}}
                       onPress={() => this.props.navigation.navigate('SignUp')}>
                      
-                      create new Account
+                       create new Account
                     </Text>
                   </Text>
                 </View>
@@ -304,6 +305,7 @@ export class SignIn extends Component {
                     borderRadius: 25,
                     borderColor: 'white',
                     color: 'white',
+                    backgroundColor:'#3B7457',
                     padding: 12,
                     borderWidth: 1,
                     marginBottom: 20,

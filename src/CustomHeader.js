@@ -8,10 +8,11 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {Icon, Badge} from 'react-native-elements';
+import {Badge} from 'react-native-elements';
 import {IMAGE} from './constants/image';
 import {Avatar} from 'react-native-elements';
 import Database from './Database';
+import Icon from 'react-native-vector-icons/Ionicons';
 const db = new Database();
 const styles = StyleSheet.create({
   text: {
@@ -44,6 +45,7 @@ export class CustomHeader extends Component {
       cart_qty: this.props.navigation.navigate.cart_qty,
       dbs: '',
       _cart_count: 0,
+      _fodcart_count: 0,
     };
     db.initDB().then((result) => {
       this.loadDbVarable(result);
@@ -60,7 +62,13 @@ export class CustomHeader extends Component {
   async componentDidMount() {
     const {navigation} = this.props;
     this._unsubscribe = navigation.addListener('focus', () => {
+      db.initDB().then((result) => {
+        this.loadData(result);
+        this.loadFoodCart(result);
+      });
+
       this.loadData();
+      this.loadFoodCart();
     });
   }
   componentWillUnmount() {
@@ -68,21 +76,72 @@ export class CustomHeader extends Component {
     this._unsubscribe();
   }
 
-  loadData() {
+  loadData(result) {
+    this.setState({
+      dbs: result,
+    });
+
     db.boxcartCont(this.state.dbs)
       .then((data) => {
         let cart_count = data;
-        
+
         this.setState({
           isLoading: false,
           _cart_count: cart_count,
         });
-
-        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>cart count is ; : "+cart_count);
       })
       .catch((err) => {
         console.log(err);
       });
+
+    // db.cartCont(this.state.dbs)
+    // .then((data) => {
+    //   let foodcart_count = data;
+
+    //   this.setState({
+    //     isLoading: false,
+    //     _fodcart_count: foodcart_count,
+    //   });
+    //   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> : "+foodcart_count);
+    // })
+    // .catch((err) => {
+    //   console.log(err);
+    // });
+  }
+
+  loadFoodCart(result) {
+    this.setState({
+      dbs: result,
+    });
+
+    console.log(
+      '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> : ' + this.state.dbs,
+    );
+    db.cartCont(this.state.dbs)
+      .then((data) => {
+        let foodcart_count = data;
+
+        this.setState({
+          isLoading: false,
+          _fodcart_count: foodcart_count,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // db.cartcount(this.state.dbs)
+    //   .then((data) => {
+    //   let cart_countnew = data;
+
+    //   this.setState({
+    //     isLoading: false,
+    //     _fodcart_count: cart_countnew,
+    //   });
+    //   console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> : "+cart_countnew);
+    // })
+    // .catch((err) => {
+    //   console.log(err);
+    // });
   }
 
   render() {
@@ -118,17 +177,13 @@ export class CustomHeader extends Component {
               }}
               onPress={() => this.props.navigation.openDrawer()}>
               <Icon
-                // raised
-                name="bars"
-                type="font-awesome"
-                color="white"
+                name="arrow-back-outline"
                 iconStyle={{
-                  fontSize: 22,
-                  fontWeight: '100',
-                  padding: 10,
-                  borderRadius: 20,
+                  fontWeight: 'normal',
                 }}
-                onPress={() => navigation.openDrawer()}
+                size={25}
+                color="white"
+                onPress={() => this.props.navigation.navigate('wherehouse')}
               />
               {/* <Image style={{ width: 28, height: 28, marginLeft: 0,padding:4 }}
                   source={IMAGE.ICON_MENU_ICON}
@@ -141,8 +196,8 @@ export class CustomHeader extends Component {
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                marginLeft: 18,
-                backgroundColor: '#e0f2f1',
+                marginLeft: 10,
+                backgroundColor: '#3B7457',
                 padding: 5,
                 paddingLeft: -5,
                 width: 40,
@@ -150,14 +205,14 @@ export class CustomHeader extends Component {
               }}
               onPress={() => this.props.navigation.goBack()}>
               <Icon
-                // raised
-                name="angle-left"
-                type="font-awesome"
-                color="black"
-                iconStyle={{fontSize: 34, marginLeft: 6}}
+                name="arrow-back-outline"
+                iconStyle={{
+                  fontWeight: 'normal',
+                }}
+                size={25}
+                color="white"
                 onPress={() => this.props.navigation.goBack()}
               />
-
               {/* <Image style={{ width: 20, height: 20, marginLeft: 10 }}
                   source={IMAGE.ICON_BACK}
                   resizeMode="contain"
@@ -172,7 +227,7 @@ export class CustomHeader extends Component {
             style={{
               textAlign: 'center',
               fontSize: 17,
-              fontWeight: 'bold',
+              fontWeight: 'normal',
               color: 'white',
             }}>
             {title}
@@ -182,53 +237,46 @@ export class CustomHeader extends Component {
           {isPost == 1 ? (
             <TouchableOpacity
               onPress={() => this.props.navigation.navigate('Cart')}>
-              <View style={{padding: 10, marginLeft: 35}}>
-                {/* 
-                  <View style={{marginLeft:60}}>
-                    <View style={{ zIndex: 5,top:0, backgroundColor: 'green', marginLeft:10}}>
-                      <Text>5</Text>
-                    </View>
-                    <View style={{ position:'absolute',zIndex: -1,backgroundColor: 'red', }}>
-                      <Icon
-                        // raised
-                        name='shopping-cart'
-                        type='font-awesome'
-                        color='white'
-                        iconStyle={{ fontSize: 30, fontWeight: 'normal' }}
-                        onPress={() => this.props.navigation.navigate('Cart')} />
-                    </View>
-                  </View> */}
+              <View style={{padding: 10, marginLeft: 60}}>
                 <Icon
-                  // raised
-                  name="shopping-cart"
-                  type="font-awesome"
+                  name="cart-outline"
+                  iconStyle={{
+                    fontWeight: 'normal',
+                  }}
+                  size={26}
                   color="white"
-                  iconStyle={{fontSize: 30, fontWeight: 'normal'}}
-                  // onPress={() => this.props.navigation.navigate('Cart')}
                 />
-
                 <Badge
                   status="error"
-                  value={cart_qty}
-                  containerStyle={{position: 'absolute', left: 55, top: 5}}
+                  value={this.state._fodcart_count}
+                  containerStyle={{position: 'absolute', left: 29, top: 3}}
                 />
               </View>
             </TouchableOpacity>
           ) : isPost == 2 ? (
             <TouchableOpacity
               onPress={() => this.props.navigation.navigate('Boxes Cart')}>
-              <View style={{padding: 10, marginLeft: 35}}>
-                <Icon
+              <View style={{padding: 10, marginLeft: 60}}>
+                {/* <Icon
                   name="shopping-cart"
                   type="font-awesome"
                   color="white"
                   iconStyle={{fontSize: 30, fontWeight: 'normal'}}
+                /> */}
+                <Icon
+                  name="cart-outline"
+                  iconStyle={{
+                    fontWeight: 'normal',
+                  }}
+                  size={26}
+                  color="white"
                 />
-                <Badge
+                 <Badge
                   status="error"
                   value={this.state._cart_count}
-                  containerStyle={{position: 'absolute', left: 55, top: 5}}
+                  containerStyle={{position: 'absolute', left: 29, top: 3}}
                 />
+               
               </View>
             </TouchableOpacity>
           ) : null}

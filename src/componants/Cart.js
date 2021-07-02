@@ -28,7 +28,7 @@ import stripe from 'tipsi-stripe';
 import SwitchSelector from 'react-native-switch-selector';
 import Modal from 'react-native-modal';
 import {PaymentCardTextField} from 'tipsi-stripe';
-
+import {CustomHeader} from '../index';
 import creditCardType from 'credit-card-type';
 // var creditCardType = require("");
 
@@ -762,10 +762,11 @@ export class Cart extends PureComponent {
         </SCLAlert>
 
         <StatusBar
-          barStyle="dark-content"
+          barStyle="light-content"
           hidden={false}
-          backgroundColor="#fff"
+          backgroundColor="#3B7457"
         />
+          <CustomHeader title="Cart" isPost isHome={false}  bgcolor='red' bdcolor='#3B7457' navigation={this.props.navigation} />
         <View style={{flex: 1}}>
           <Modal
             isVisible={this.state.modalVisible}

@@ -343,7 +343,7 @@ export  class HomeAppliance extends Component {
             fadeOutParallaxForeground={true}
             renderParallaxBackground={({animatedValue}) => (
               <View animatedValue={animatedValue}>
-                <View style={{backgroundColor: '#009ae4', padding: 60}}>
+                <View style={{backgroundColor: '#3B7457', padding: 60}}>
                   <ImageBackground
                     source={{
                       uri:
@@ -422,8 +422,8 @@ export  class HomeAppliance extends Component {
                     <Text
                       style={{
                         fontWeight: 'bold',
-                        fontSize: 38,
-                        color: 'red',
+                        fontSize: 30,
+                        color: 'black',
                         marginTop: -2,
                       }}>
                       A${' '}
@@ -547,7 +547,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonstyle: {
-    backgroundColor: '#009ae4',
+    backgroundColor: '#3B7457',
     borderRadius: 15,
     width: '100%',
     padding: 20,

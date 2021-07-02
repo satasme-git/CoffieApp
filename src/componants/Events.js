@@ -104,7 +104,7 @@ export class Events extends Component {
               title="Events"
               isPost={false}
               isHome={true}
-              bdcolor=""
+              bdcolor="#3B7457"
               bgcolor="white"
               navigation={this.props.navigation}
             />

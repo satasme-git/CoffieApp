@@ -68,17 +68,17 @@ export class TabScreentest extends Component {
       dbs: result,
     });
 
-    db.cartCont(this.state.dbs)
-      .then((data) => {
-        let cart_count = data;
+    // db.cartCont(this.state.dbs)
+    //   .then((data) => {
+    //     let cart_count = data;
 
-        this.setState({
-          _aaa: cart_count,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    //     this.setState({
+    //       _aaa: cart_count,
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   }
   showDialog() {
     this.setState({
@@ -263,11 +263,11 @@ export class TabScreentest extends Component {
       return (
         <SafeAreaView style={{flex: 1, backgroundColor: '#afcecb'}}>
           <StatusBar
-            barStyle="dark-content"
+            barStyle="light-content"
             hidden={false}
-            backgroundColor="#fff"
+            backgroundColor="#3B7457"
           />
-          {/* <CustomHeader title="Our Menu" isPost isHome={false} cart_qty={this.state._aaa} bgcolor='white' bdcolor='white' navigation={this.props.navigation} /> */}
+          <CustomHeader title="Our Menu" isPost isHome={false} cart_qty={this.state._aaa} bgcolor='white' bdcolor='#3B7457' navigation={this.props.navigation} />
           {/* <View style={{ flex: 1, alignItems: 'center', marginTop: 20 }}> */}
 
           <View style={{backgroundColor: 'white', marginBottom: 6}}>
@@ -275,12 +275,12 @@ export class TabScreentest extends Component {
               <View
                 style={{
                   width: 90,
-                  height: 73,
+                  height: 83,
                   borderBottomWidth: 4,
                   borderColor: '#00897b',
                   paddingHorizontal: 22,
                 }}>
-                <Shimmer style={{marginBottom: 5, opacity: 0.3}}>
+                <Shimmer style={{marginBottom: 5,marginTop:10, opacity: 0.3}}>
                   <View
                     style={{
                       width: 45,
@@ -301,7 +301,7 @@ export class TabScreentest extends Component {
                 </Shimmer>
               </View>
               <View style={{width: 100, height: 73, paddingHorizontal: 27}}>
-                <Shimmer style={{marginBottom: 5, opacity: 0.3}}>
+                <Shimmer style={{marginBottom: 5,marginTop:10, opacity: 0.3}}>
                   <View
                     style={{
                       width: 45,
@@ -322,7 +322,7 @@ export class TabScreentest extends Component {
                 </Shimmer>
               </View>
               <View style={{width: 100, height: 73, paddingHorizontal: 27}}>
-                <Shimmer style={{marginBottom: 5, opacity: 0.3}}>
+                <Shimmer style={{marginBottom: 5,marginTop:10, opacity: 0.3}}>
                   <View
                     style={{
                       width: 45,
@@ -343,7 +343,7 @@ export class TabScreentest extends Component {
                 </Shimmer>
               </View>
               <View style={{width: 100, height: 73, paddingHorizontal: 27}}>
-                <Shimmer style={{marginBottom: 5, opacity: 0.3}}>
+                <Shimmer style={{marginBottom: 5,marginTop:10, opacity: 0.3}}>
                   <View
                     style={{
                       width: 45,
@@ -824,13 +824,13 @@ export class TabScreentest extends Component {
       );
     } else {
       return (
-        <SafeAreaView style={{flex: 1, backgroundColor: '#afcecb'}}>
+        <SafeAreaView style={{flex: 1, backgroundColor: '#F2F2F2'}}>
           <StatusBar
-            barStyle="dark-content"
+            barStyle="light-content"
             hidden={false}
-            backgroundColor="#fff"
+            backgroundColor="#3B7457"
           />
-          {/* <CustomHeader title="Our Menu" isPost isHome={false} cart_qty={this.state._aaa} bgcolor='white' bdcolor='white' navigation={this.props.navigation} /> */}
+          <CustomHeader title="Our Menu" isPost isHome={false}  bgcolor='red' bdcolor='#3B7457' navigation={this.props.navigation} />
           <DynamicTabView
             data={this.state.data}
             renderTab={this._renderItem}

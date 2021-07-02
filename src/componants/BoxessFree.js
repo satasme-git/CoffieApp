@@ -417,8 +417,8 @@ export  class BoxessFree extends Component {
                     <Text
                       style={{
                         fontWeight: 'bold',
-                        fontSize: 38,
-                        color: 'red',
+                        fontSize: 30,
+                        color: 'black',
                         marginTop: -2,
                       }}>
                       A${' '}

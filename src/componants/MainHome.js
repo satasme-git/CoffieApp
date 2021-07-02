@@ -45,6 +45,7 @@ import Carousel from 'react-native-snap-carousel';
 import Dialog from 'react-native-dialog';
 import {MaterialDialog} from 'react-native-material-dialog';
 let deviceWidth = Dimensions.get('window').width;
+import * as Animatable from 'react-native-animatable';
 export class MainHome extends Component {
   constructor(props) {
     super(props);
@@ -302,8 +303,7 @@ export class MainHome extends Component {
     if (isLoading) {
       return (
         <View style={{backgroundColor: '#F2F2F2', height: 220}}>
-          <View
-            style={{backgroundColor: '#3B7457', height: 80, elevation: 10}}>
+          <View style={{backgroundColor: '#3B7457', height: 80, elevation: 10}}>
             <View style={{marginLeft: 20, marginBottom: 10, marginTop: -5}}>
               <Text style={{fontWeight: 'bold', fontSize: 32, color: 'white'}}>
                 Welcome To
@@ -379,26 +379,33 @@ export class MainHome extends Component {
       );
     } else {
       return (
-        <ParallaxScroll
-          renderHeader={({animatedValue}) => (
-            <View style={{backgroundColor: 'red', height: 80}}>
-              <View style={{backgroundColor: '#3B7457', height: 80}}>
-                <View style={{marginLeft: 20, marginBottom: 10, marginTop: -5}}>
-                  <Text
-                    style={{fontWeight: 'bold', fontSize: 32, color: 'white'}}>
-                    Welcome To
-                  </Text>
-                  <Text
-                    style={{
-                      fontWeight: 'normal',
-                      fontSize: 20,
-                      color: 'white',
-                    }}>
-                    Marlen's Warehouse
-                  </Text>
-                </View>
-                <View style={{marginTop: 0, paddingLeft: 15, paddingRight: 15}}>
-                  {/* <View
+        <Animatable.View animation="bounceInDown">
+          <ParallaxScroll
+            renderHeader={({animatedValue}) => (
+              <View style={{backgroundColor: 'red', height: 80}}>
+                <View style={{backgroundColor: '#3B7457', height: 80}}>
+                  <View
+                    style={{marginLeft: 20, marginBottom: 10, marginTop: -5}}>
+                    <Text
+                      style={{
+                        fontWeight: 'bold',
+                        fontSize: 32,
+                        color: 'white',
+                      }}>
+                      Welcome To
+                    </Text>
+                    <Text
+                      style={{
+                        fontWeight: 'normal',
+                        fontSize: 20,
+                        color: 'white',
+                      }}>
+                      Marlen's Warehouse
+                    </Text>
+                  </View>
+                  <View
+                    style={{marginTop: 0, paddingLeft: 15, paddingRight: 15}}>
+                    {/* <View
                     style={{
                       alignItems: 'center',
                       flexDirection: 'row',
@@ -422,35 +429,38 @@ export class MainHome extends Component {
                       autoFocus={false}
                     />
                   </View> */}
+                  </View>
                 </View>
               </View>
-            </View>
-          )}
-          headerHeight={80}
-          isHeaderFixed={false}
-          parallaxHeight={80}
-          parallaxBackgroundScrollSpeed={5}
-          parallaxForegroundScrollSpeed={2.5}>
-          <View style={{height: 780}}>
-            <View style={{height: 230}}>
-              <Carousel
-                ref={(c) => {
-                  this._carousel = c;
-                }}
-                autoplay={true}
-                loop={true}
-                useScrollView={true}
-                scrollEnabled={true}
-                hasParallaxImages={true}
-                layout={'default'}
-                layoutCardOffset={18}
-                data={this.state.slides}
-                renderItem={this._renderItem}
-                sliderWidth={deviceWidth}
-                itemWidth={340}
-              />
+            )}
+            headerHeight={80}
+            isHeaderFixed={false}
+            parallaxHeight={80}
+            parallaxBackgroundScrollSpeed={5}
+            parallaxForegroundScrollSpeed={2.5}>
+            <View style={{height: 780,backgroundColor:'#F2F2F2'}}>
+              <View style={{height: 140, marginTop: 10,}}>
+                <Carousel
+                  ref={(c) => {
+                    this._carousel = c;
+                  }}
+                  autoplay={true}
+                  loop={true}
+                  useScrollView={true}
+                  scrollEnabled={true}
+                  hasParallaxImages={true}
+                  layout={'default'}
+                  // inactiveSlideScale={1}
+                 
+             
+                  layoutCardOffset={18}
+                  data={this.state.slides}
+                  renderItem={this._renderItem}
+                  sliderWidth={deviceWidth}
+                  itemWidth={250}
+                />
 
-              {/* <Swiper
+                {/* <Swiper
                 horizontal
                 loop
                 timeout={-3.5}
@@ -474,7 +484,7 @@ export class MainHome extends Component {
                 
                 } */}
 
-              {/* <View
+                {/* <View
                   style={{
                     flex: 1,
                     alignItems: 'center',
@@ -529,162 +539,165 @@ export class MainHome extends Component {
                     source={IMAGE.ICON_SLIDE3}
                     style={{height: 280, width: 400}}></Image>
                 </View> */}
-              {/* </Swiper> */}
-            </View>
+                {/* </Swiper> */}
+              </View>
 
-            <View>
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  fontSize: 18,
-                  paddingLeft: 15,
-                  paddingTop: 20,
-                }}>
-                Our Category
-              </Text>
-              <View
-                style={{
-                  borderTopWidth: 4,
-                  borderTopColor: '#009688',
-                  borderRadius: 3,
-                  marginHorizontal: 16,
-                  width: 45,
-                  marginTop: 10,
-                }}></View>
-              {/* <ScrollView
+              <View>
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: 18,
+                    paddingLeft: 15,
+                    paddingTop: 20,
+                  }}>
+                  Our Category
+                </Text>
+                <View
+                  style={{
+                    borderTopWidth: 4,
+                    borderTopColor: '#009688',
+                    borderRadius: 3,
+                    marginHorizontal: 16,
+                    width: 45,
+                    marginTop: 10,
+                  }}></View>
+                {/* <ScrollView
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 nestedScrollEnabled={true}
                 contentInsetAdjustmentBehavior="automatic"> */}
-              <FlatList
-                horizontal
-                contentContainerStyle={{
-                  paddingTop: StatusBar.currentHeight || 0,
-                }}
-                ListEmptyComponent={this.emptyComponent}
-                scrollEnabled={true}
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={this.keyExtractor}
-                data={this.state.data}
-                renderItem={this.renderItem}
-              />
-              {/* </ScrollView> */}
-              <Text
-                style={{
-                  fontWeight: 'bold',
-                  fontSize: 18,
-                  paddingLeft: 15,
-                  paddingTop: 0,
-                }}>
-                Favourites
-              </Text>
-              <View style={[styles.card, {margin: 15}]}>
-                <View style={{flexDirection: 'row'}}>
-                  <View style={{backgroundColor: '#F2F2F2', borderRadius: 200}}>
-                    <Image
-                      source={IMAGE.ICON_ABTIMG6}
-                      style={{height: 120, width: 120}}></Image>
-                  </View>
-                  <View style={{margin: 10}}>
-                    <Text style={{fontSize: 17, fontWeight: 'bold'}}>
-                      Blueberry Muffin
-                    </Text>
-                    <Text
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                      style={{
-                        fontSize: 11,
-                        color: 'gray',
-                        width: '21%',
-                        marginTop: 5,
-                      }}>
-                      Originally published on this day in 2014, these blueberry
-                      muffins are a personal and reader favorite. I found myself
-                      baking the muffins often, swapping blueberries for apples,
-                      peaches, and other fruits.
-                    </Text>
-                    <Star score={4.7} style={starStyle} />
-                    <Text
-                      style={{color: 'red', fontWeight: 'bold', fontSize: 16}}>
-                      A$ 4
-                    </Text>
+                <FlatList
+                  horizontal
+                  contentContainerStyle={{
+                    paddingTop: StatusBar.currentHeight || 0,
+                  }}
+                  ListEmptyComponent={this.emptyComponent}
+                  scrollEnabled={true}
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={this.keyExtractor}
+                  data={this.state.data}
+                  renderItem={this.renderItem}
+                />
+                {/* </ScrollView> */}
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: 18,
+                    paddingLeft: 15,
+                    paddingTop: 0,
+                  }}>
+                  Favourites
+                </Text>
+                <View style={[styles.card, {margin: 15}]}>
+                  <View style={{flexDirection: 'row'}}>
+                    <View
+                      style={{backgroundColor: '#F2F2F2', borderRadius: 200}}>
+                      <Image
+                        source={IMAGE.ICON_ABTIMG6}
+                        style={{height: 120, width: 120}}></Image>
+                    </View>
+                    <View style={{margin: 10}}>
+                      <Text style={{fontSize: 17, fontWeight: 'bold'}}>
+                        Blueberry Muffin
+                      </Text>
+                      <Text
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                        style={{
+                          fontSize: 11,
+                          color: 'gray',
+                          width: '21%',
+                          marginTop: 5,
+                        }}>
+                        Originally published on this day in 2014, these
+                        blueberry muffins are a personal and reader favorite. I
+                        found myself baking the muffins often, swapping
+                        blueberries for apples, peaches, and other fruits.
+                      </Text>
+                      <Star score={4.7} style={starStyle} />
+                      <Text
+                        style={{
+                          color: 'red',
+                          fontWeight: 'bold',
+                          fontSize: 16,
+                        }}>
+                        A$ 4
+                      </Text>
+                    </View>
                   </View>
                 </View>
               </View>
-             
-            
+              {/* <Button title="Show dialog" onPress={() => this.showDialog()} /> */}
             </View>
-            {/* <Button title="Show dialog" onPress={() => this.showDialog()} /> */}
-          </View>
-          <View>
-            <MaterialDialog
-              title="Select Boxes type "
-              visible={this.state.visible}
-              cancelLabel={'CAncel'}
-              onCancel={() => this.setState({visible: false})}
-              //  width={'100%'}
-            >
-              {/* <View> */}
-              {/* <View> */}
-              <View style={[styles.container1, {width: 310}]}>
-                <Card style={[styles.card1, {backgroundColor: '#00897b'}]}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.handleCancel();
-                      this.props.navigation.navigate('BoxessFree');
-                    }}>
-                    <View style={{alignItems: 'center'}}>
-                      <View style={{height: 10, padding: 5}}>
-                        <Text style={{color: 'white'}}>Residential</Text>
-                        <Text style={{color: 'white'}}>Boxes</Text>
-                      </View>
+            <View>
+              <MaterialDialog
+                title="Select Boxes type "
+                visible={this.state.visible}
+                cancelLabel={'CAncel'}
+                onCancel={() => this.setState({visible: false})}
+                //  width={'100%'}
+              >
+                {/* <View> */}
+                {/* <View> */}
+                <View style={[styles.container1, {width: 310}]}>
+                  <Card style={[styles.card1, {backgroundColor: '#00897b'}]}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.handleCancel();
+                        this.props.navigation.navigate('BoxessFree');
+                      }}>
+                      <View style={{alignItems: 'center'}}>
+                        <View style={{height: 10, padding: 5}}>
+                          <Text style={{color: 'white'}}>Residential</Text>
+                          <Text style={{color: 'white'}}>Boxes</Text>
+                        </View>
 
-                      <Text style={{marginTop: 0, fontSize: 12}}> </Text>
-                    </View>
-                  </TouchableOpacity>
-                </Card>
-                <Card style={[styles.card1, {backgroundColor: '#c1295c'}]}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.handleCancel();
-                      this.props.navigation.navigate('CommercialBoxes');
-                    }}>
-                    <View style={{alignItems: 'center'}}>
-                      <View style={{height: 10, padding: 5}}>
-                        <Text style={{color: 'white'}}>Commercial</Text>
-                        <Text style={{color: 'white'}}>Boxes</Text>
+                        <Text style={{marginTop: 0, fontSize: 12}}> </Text>
                       </View>
+                    </TouchableOpacity>
+                  </Card>
+                  <Card style={[styles.card1, {backgroundColor: '#c1295c'}]}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.handleCancel();
+                        this.props.navigation.navigate('CommercialBoxes');
+                      }}>
+                      <View style={{alignItems: 'center'}}>
+                        <View style={{height: 10, padding: 5}}>
+                          <Text style={{color: 'white'}}>Commercial</Text>
+                          <Text style={{color: 'white'}}>Boxes</Text>
+                        </View>
 
-                      <Text style={{marginTop: 0, fontSize: 12}}> </Text>
-                    </View>
-                  </TouchableOpacity>
-                </Card>
-                <Card style={[styles.card1, {backgroundColor: '#009ae4'}]}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.handleCancel();
-                      this.props.navigation.navigate('HomeAppliance');
-                    }}>
-                    <View style={{alignItems: 'center'}}>
-                      <View style={{height: 10, padding: 5}}>
-                        <Text style={{color: 'white'}}>Home </Text>
-                        <Text style={{color: 'white'}}>Appliance</Text>
+                        <Text style={{marginTop: 0, fontSize: 12}}> </Text>
                       </View>
+                    </TouchableOpacity>
+                  </Card>
+                  <Card style={[styles.card1, {backgroundColor: '#009ae4'}]}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        this.handleCancel();
+                        this.props.navigation.navigate('HomeAppliance');
+                      }}>
+                      <View style={{alignItems: 'center'}}>
+                        <View style={{height: 10, padding: 5}}>
+                          <Text style={{color: 'white'}}>Home </Text>
+                          <Text style={{color: 'white'}}>Appliance</Text>
+                        </View>
 
-                      <Text style={{marginTop: 0, fontSize: 12}}> </Text>
-                    </View>
-                  </TouchableOpacity>
-                </Card>
-              </View>
-              {/* </View>
+                        <Text style={{marginTop: 0, fontSize: 12}}> </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </Card>
+                </View>
+                {/* </View>
               </View> */}
-              {/* <Text style={styles.dialogText}>
+                {/* <Text style={styles.dialogText}>
     Let Google help apps determine location. This means sending anonymous
     location data to Google, even when no apps are running.
   </Text> */}
-            </MaterialDialog>
+              </MaterialDialog>
 
-            {/* <Dialog.Container visible={this.state.visible}>
+              {/* <Dialog.Container visible={this.state.visible}>
               <Dialog.Title>Select Boxes type </Dialog.Title>
               <Dialog.Description> 
                 <View>
@@ -745,8 +758,9 @@ export class MainHome extends Component {
                 onPress={() => this.handleCancel()}
               />
             </Dialog.Container> */}
-          </View>
-        </ParallaxScroll>
+            </View>
+          </ParallaxScroll>
+        </Animatable.View>
       );
     }
   }

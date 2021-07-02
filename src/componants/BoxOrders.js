@@ -12,6 +12,7 @@ import {FlatList} from 'react-native-gesture-handler';
 import {List, ListItem, Left, Body, Right} from 'native-base';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Button} from 'react-native-elements';
+import {CustomHeader} from '../index';
 export class BoxOrders extends Component {
   constructor(props) {
     super(props);
@@ -84,6 +85,13 @@ export class BoxOrders extends Component {
           barStyle="light-content"
           hidden={false}
           backgroundColor="#3B7457"
+        />
+         <CustomHeader
+          title=""
+          isHome={false}
+          bdcolor="#3B7457"
+          bgcolor="#3B7457"
+          navigation={this.props.navigation}
         />
         <View style={{flex: 1, paddingBottom: 50}}>
           <View

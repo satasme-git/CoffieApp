@@ -29,6 +29,7 @@ import SwitchSelector from 'react-native-switch-selector';
 import Modal from 'react-native-modal';
 import {PaymentCardTextField} from 'tipsi-stripe';
 import creditCardType from 'credit-card-type';
+import {CustomHeader} from '../index';
 const db = new Database();
 
 stripe.setOptions({
@@ -665,9 +666,16 @@ export class BoxesCart extends PureComponent {
         </SCLAlert>
 
         <StatusBar
-          barStyle="dark-content"
+          barStyle="light-content"
           hidden={false}
-          backgroundColor="#fff"
+          backgroundColor="#3B7457"
+        />
+          <CustomHeader
+          title=""
+          isHome={false}
+          bdcolor="#3B7457"
+          bgcolor="#3B7457"
+          navigation={this.props.navigation}
         />
         <View style={{flex: 1}}>
           <Modal

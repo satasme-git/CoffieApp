@@ -11,12 +11,13 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Avatar, Icon, Badge} from 'react-native-elements';
+import {Avatar, Badge} from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import Icon from 'react-native-vector-icons/Ionicons';
 LogBox.ignoreAllLogs(true);
 
 import {
@@ -205,7 +206,7 @@ const WherehouseScreen = ({navigation}) => (
           <TouchableOpacity
             style={{flexDirection: 'row', alignItems: 'center', marginLeft: 10}}
             onPress={() => navigation.openDrawer()}>
-            <Icon
+            {/* <Icon
               // raised
               name="bars"
               type="font-awesome"
@@ -217,7 +218,14 @@ const WherehouseScreen = ({navigation}) => (
                 borderRadius: 20,
               }}
               // onPress={() => navigation.openDrawer()}
-            />
+            /> */}
+            <Icon 
+          name="menu-outline" 
+          iconStyle={{
+            fontWeight: 'normal',
+          }}
+          onPress={() => navigation.openDrawer()}
+          size={28} color='white' />
           </TouchableOpacity>
         ),
       }}
@@ -264,9 +272,9 @@ const AboutUsScreen = ({navigation}) => (
 const TabsCreen = ({navigation}) => (
   <Tabs.Navigator
     initialRouteName="wherehouse"
-    activeColor="#3B7457"
-    inactiveColor="#bdbdbd"
-    barStyle={{backgroundColor: 'white'}}>
+    activeColor="white"
+    inactiveColor="#90a4ae"
+    barStyle={{backgroundColor: '#3B7457'}}>
     <Tabs.Screen
       options={{
         unmountInactiveRoutes: true,
@@ -274,7 +282,15 @@ const TabsCreen = ({navigation}) => (
         unmountOnBlur: true,
         tabBarLabel: 'Home',
         tabBarIcon: ({color}) => (
-          <MaterialCommunityIcons name="home" color={color} size={26} />
+          <Icon 
+          name="home-outline" 
+          iconStyle={{
+        
+            fontWeight: 'normal',
+  
+          }}
+          size={23} color={color} />
+          // <MaterialCommunityIcons name="home" color={color} size={26} />
         ),
       }}
       name="wherehouse"
@@ -294,7 +310,13 @@ const TabsCreen = ({navigation}) => (
         unmountOnBlur: true,
         tabBarLabel: 'Profile',
         tabBarIcon: ({color}) => (
-          <MaterialCommunityIcons name="account" color={color} size={26} />
+          <Icon 
+          name="person-outline" 
+          iconStyle={{
+            fontWeight: 'normal',
+          }}
+          size={23} color={color} />
+          // <MaterialCommunityIcons name="account" color={color} size={26} />
         ),
       }}
       name="Profile"
@@ -308,7 +330,13 @@ const TabsCreen = ({navigation}) => (
         unmountOnBlur: true,
         tabBarLabel: 'Orders',
         tabBarIcon: ({color}) => (
-          <MaterialCommunityIcons name="border-all" color={color} size={26} />
+          <Icon 
+          name="fast-food-outline" 
+          iconStyle={{
+            fontWeight: 'normal',
+          }}
+          size={23} color={color} />
+          // <MaterialCommunityIcons name="border-all" color={color} size={26} />
         ),
       }}
       name="OrderHistory"
@@ -320,7 +348,17 @@ const TabsCreen = ({navigation}) => (
         unmountOnBlur: true,
         tabBarLabel: 'Loyality Card',
         tabBarIcon: ({color}) => (
-          <MaterialCommunityIcons name="credit-card" color={color} size={26} />
+          <Icon 
+          name="card-outline" 
+          iconStyle={{
+            fontSize: 25,
+            fontWeight: 'normal',
+            paddingLeft: 15,
+            paddingRight: 15,
+            paddingTop: 3,
+          }}
+          size={23} color={color} />
+          // <MaterialCommunityIcons name="credit-card" color={color} size={26} />
         ),
       }}
       name="WhereHouse"
@@ -379,9 +417,9 @@ export default function App() {
         <StackApp.Screen
           name="TabScreentest"
           options={{
-            headerShown: true,
-            title: 'Our Menu',
-            headerStyle: {backgroundColor: '#fff', elevation: 0},
+            headerShown: false,
+            // title: 'Our Menu',
+            // headerStyle: {backgroundColor: '#fff', elevation: 0},
           }}
           component={TabScreentest}
         />
@@ -394,7 +432,7 @@ export default function App() {
         {/* <StackApp.Screen name="AboutUsScreeen" options={{ headerShown: false }} component={AboutUsScreeen} /> */}
         <StackApp.Screen
           name="Cart"
-          options={{headerShown: true}}
+          options={{headerShown: false}}
           component={Cart}
         />
         <StackApp.Screen
@@ -419,9 +457,9 @@ export default function App() {
           component={SignUp}
         />
 
-        <StackApp.Screen name="Boxes Cart" component={BoxesCart} />
+        <StackApp.Screen name="Boxes Cart"  options={{headerShown: false}}  component={BoxesCart} />
         {/* <StackApp.Screen name="OrderHistory"  component={OrderHistory}/> */}
-        <StackApp.Screen name="Box Orders"  component={BoxOrders}/>
+        <StackApp.Screen name="Box Orders" options={{headerShown: false}}  component={BoxOrders}/>
         {/* <StackApp.Screen name="Profile"  options={{headerShown: false}} component={Profile}/> */}
         {/* <StackApp.Screen
           name="CommercialBoxes"

@@ -340,7 +340,7 @@ export class CommercialBoxes extends Component {
           fadeOutParallaxForeground={true}
           renderParallaxBackground={({animatedValue}) => (
             <View animatedValue={animatedValue}>
-              <View style={{backgroundColor: '#c1295c', padding: 60}}>
+              <View style={{backgroundColor: '#3B7457', padding: 60}}>
                 <ImageBackground
                   source={{
                     uri:
@@ -416,8 +416,8 @@ export class CommercialBoxes extends Component {
                   <Text
                     style={{
                       fontWeight: 'bold',
-                      fontSize: 38,
-                      color: 'red',
+                      fontSize: 30,
+                      color: 'black',
                       marginTop: -2,
                     }}>
                     A${' '}
