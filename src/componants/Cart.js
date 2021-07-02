@@ -28,7 +28,7 @@ import stripe from 'tipsi-stripe';
 import SwitchSelector from 'react-native-switch-selector';
 import Modal from 'react-native-modal';
 import {PaymentCardTextField} from 'tipsi-stripe';
-import {CustomHeader} from '../index';
+
 import creditCardType from 'credit-card-type';
 // var creditCardType = require("");
 
@@ -308,6 +308,9 @@ export class Cart extends PureComponent {
       });
   }
   async componentDidMount() {
+
+  
+   
     LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
     const myArray = await AsyncStorage.getItem('cus_id');
@@ -762,11 +765,10 @@ export class Cart extends PureComponent {
         </SCLAlert>
 
         <StatusBar
-          barStyle="light-content"
+          barStyle="dark-content"
           hidden={false}
-          backgroundColor="#3B7457"
+          backgroundColor="#fff"
         />
-          <CustomHeader title="Cart" isPost isHome={false}  bgcolor='red' bdcolor='#3B7457' navigation={this.props.navigation} />
         <View style={{flex: 1}}>
           <Modal
             isVisible={this.state.modalVisible}
@@ -930,12 +932,12 @@ export class Cart extends PureComponent {
                         {
                           backgroundColor: '#00897b',
                           borderRadius: 15,
-                          width: '105%',
+                          width: '89%',
                           borderColor: 'white',
                           color: '#ccc',
                           padding: 15,
                           borderWidth: 1,
-                          // paddingHorizontal: 80,
+                          paddingHorizontal: 82,
                         })
                       }
                       onPress={() => this.setRbsheet_height()}
@@ -954,12 +956,12 @@ export class Cart extends PureComponent {
                             {
                               backgroundColor: 'red',
                               borderRadius: 15,
-                              width: '115%',
+                              width: '92%',
                               borderColor: 'white',
                               color: '#ccc',
                               padding: 15,
                               borderWidth: 1,
-                              // paddingHorizontal: 82,
+                              paddingHorizontal: 82,
                             })
                           }
                           onPress={this.doPayment}

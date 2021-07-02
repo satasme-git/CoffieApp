@@ -9,7 +9,7 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-// import {Icon} from 'react-native-elements';
+import {Icon} from 'react-native-elements';
 import {Avatar} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 import * as Animatable from 'react-native-animatable';
@@ -19,13 +19,12 @@ import {
   CollapseBody,
   AccordionList,
 } from 'accordion-collapse-react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 export class CustomDrawerContent extends Component {
   constructor(props) {
     super(props);
     this.state = {
       userName: '',
-      abc: null,
+      abc: '',
       login_title: '',
       _id: '',
       _name: '',
@@ -38,10 +37,7 @@ export class CustomDrawerContent extends Component {
     this._unsubscribe = navigation.addListener('focus', () => {
         this.loadVal();
         this.getoprofileDetails();
-       
     });
-    this.getoprofileDetails();
-    this.loadVal();
   }
 
   componentWillUnmount() {
@@ -51,8 +47,6 @@ export class CustomDrawerContent extends Component {
   async getoprofileDetails() {
    
     const myArray = await AsyncStorage.getItem('cus_id');
-    const name = await AsyncStorage.getItem('cus_name');
-    
     fetch('https://satasmemiy.tk/api/profile/' + myArray, {
       method: 'post',
 
@@ -70,8 +64,8 @@ export class CustomDrawerContent extends Component {
         this.setState({
           isLoading: false,
           _id: responseJson.id,
-          _name: name,
-          _email: responseJson.email,
+          // _name: responseJson.name,
+          // _email: responseJson.email,
           // _cus_id: myArray,
           abc : responseJson.image,
         });
@@ -107,7 +101,7 @@ export class CustomDrawerContent extends Component {
 
   render() {
     return (
-      <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+      <SafeAreaView style={{flex: 1, backgroundColor: '#fff', opacity: 0.9}}>
         <ScrollView>
           <ImageBackground
            
@@ -116,38 +110,36 @@ export class CustomDrawerContent extends Component {
               width: 300,
               paddingLeft: 30,
               paddingBottom: 0,
-              paddingTop: 13,
+              paddingTop: 50,
               backgroundColor: '#0C5D39',
             }}>
             <Avatar
               rounded
               showEditButton
-              size={75}
+              size={100}
               source={
-                this.state.abc != null ? { uri: "https://satasmemiy.tk/images/Customer/" + this.state.abc } :require('./images/profiled.png')
+                this.state.abc != '' ? { uri: "https://satasmemiy.tk/images/Customer/" + this.state.abc } :require('./images/profiled.png')
                 
               }
 
               // source={require('./images/profiled.png')}
-              // onEditPress={() => console.log('edit button pressed')}
-              // onLongPress={() => console.log('component long pressed')}
+              onEditPress={() => console.log('edit button pressed')}
+              onLongPress={() => console.log('component long pressed')}
               // onPress={() => this.props.navigation.navigate('ProfileImageView')}
               editButton={{
                 name: 'edit',
               }}></Avatar>
 
-            <Text style={{color: 'white', fontSize: 15, marginVertical: 1}}>
-              {this.state._name}
+            <Text style={{color: 'white', fontSize: 15, marginVertical: 8}}>
+              {this.state.userName}
             </Text>
-            <Text style={{color: 'white', fontSize: 15,marginTop:-5,marginBottom:10}}>{this.state._email}</Text>
           </ImageBackground>
 
           <View
             style={{
-              backgroundColor: 'white',
+              backgroundColor: '#0C5D39',
               paddingTop: 5,
               paddingBottom: 10,
-              opacity: 0.9
             }}>
             {/* <TouchableOpacity style={[{ paddingLeft: 10, paddingRight: 10, paddingTop: 2 }]} activeOpacity={0.5} onPress={() => this.props.navigation.navigate('SignIn')}>
                             <View style={{ flexDirection: "row", padding: 5, backgroundColor: '#3B7457' }}>
@@ -171,101 +163,136 @@ export class CustomDrawerContent extends Component {
                 style={{
                   flexDirection: 'row',
                   padding: 5,
-                  backgroundColor: '457',
-                  marginLeft:15
+                  backgroundColor: '#3B7457',
                 }}>
-                  <Icon 
-                  name="home-outline" 
+                <Icon
+                  name="home"
+                  type="font-awesome"
+                  color="white"
                   iconStyle={{
-                
+                    fontSize: 25,
                     fontWeight: 'normal',
                     paddingLeft: 15,
                     paddingRight: 15,
                     paddingTop: 3,
                   }}
-                  size={23} color="black" />
+                />
                 <View style={styles.SeparatorLine} />
                 <Text
                   style={{
-                    paddingLeft: 20,
-                    paddingTop: 4,
+                    paddingLeft: 5,
+                    paddingTop: 8,
                     paddingBottom: 11,
-                    color: 'black',
+                    color: 'white',
                   }}>
                   Home{' '}
                 </Text>
               </View>
             </TouchableOpacity>
+
             <TouchableOpacity
               style={[{paddingLeft: 10, paddingRight: 10, paddingTop: 2}]}
               activeOpacity={0.5}
-              onPress={() => this.props.navigation.navigate('OrderHistory')}>
+              onPress={() => this.props.navigation.navigate('AboutUsScreeen')}>
               <View
                 style={{
                   flexDirection: 'row',
                   padding: 5,
-                  backgroundColor: '457',
-                  marginLeft:15
+                  backgroundColor: '#3B7457',
                 }}>
-                  <Icon 
-                  name="receipt-outline" 
+                <Icon
+                  name="university"
+                  type="font-awesome"
+                  color="white"
                   iconStyle={{
-                    fontSize: 25,
+                    fontSize: 18,
                     fontWeight: 'normal',
                     paddingLeft: 15,
                     paddingRight: 15,
-                    paddingTop: 3,
+                    paddingTop: 8,
                   }}
-                  size={23} color="black" />
+                />
                 <View style={styles.SeparatorLine} />
                 <Text
                   style={{
-                    paddingLeft: 20,
-                    paddingTop: 5,
+                    paddingLeft: 5,
+                    paddingTop: 8,
                     paddingBottom: 11,
-                    color: 'black',
+                    color: 'white',
                   }}>
-                  Order History{' '}
+                  About Us{' '}
                 </Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity
               style={[{paddingLeft: 10, paddingRight: 10, paddingTop: 2}]}
               activeOpacity={0.5}
-              // this.props.navigation.navigate('TabScreentest', {
-              //   categpry_name: item.name,
-              // })
-              onPress={() => this.props.navigation.navigate('TabScreentest',{categpry_name:"Coffee"})}>
+              onPress={() => this.props.navigation.navigate('WhereHouse')}>
               <View
                 style={{
                   flexDirection: 'row',
                   padding: 5,
-                  backgroundColor: '457',
-                  marginLeft:15
+                  backgroundColor: '#3B7457',
                 }}>
-                  <Icon 
-                  name="fast-food-outline" 
+                <Icon
+                  name="id-card"
+                  type="font-awesome"
+                  color="white"
                   iconStyle={{
-                    fontSize: 25,
+                    fontSize: 18,
                     fontWeight: 'normal',
                     paddingLeft: 15,
                     paddingRight: 15,
-                    paddingTop: 3,
+                    paddingTop: 8,
                   }}
-                  size={23} color="black" />
+                />
                 <View style={styles.SeparatorLine} />
                 <Text
                   style={{
-                    paddingLeft: 20,
-                    paddingTop: 5,
+                    paddingLeft: 5,
+                    paddingTop: 8,
                     paddingBottom: 11,
-                    color: 'black',
+                    color: 'white',
                   }}>
-                 Menu{' '}
+                  Loyalty Card{' '}
                 </Text>
               </View>
             </TouchableOpacity>
-            
+            <TouchableOpacity
+              style={[{paddingLeft: 10, paddingRight: 10, paddingTop: 2}]}
+              activeOpacity={0.5}
+              onPress={() => this.props.navigation.navigate('Events')}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  padding: 5,
+                  backgroundColor: '#3B7457',
+                }}>
+                <Icon
+                  name="id-card"
+                  type="font-awesome"
+                  color="white"
+                  iconStyle={{
+                    fontSize: 18,
+                    fontWeight: 'normal',
+                    paddingLeft: 15,
+                    paddingRight: 15,
+                    paddingTop: 8,
+                  }}
+                />
+                <View style={styles.SeparatorLine} />
+                <Text
+                  style={{
+                    paddingLeft: 5,
+                    paddingTop: 8,
+                    paddingBottom: 11,
+                    color: 'white',
+                  }}>
+                  Events{' '}
+                </Text>
+              </View>
+            </TouchableOpacity>
+
             <Collapse
               style={[{paddingLeft: 10, paddingRight: 10, paddingTop: 2}]}
               activeOpacity={0.5}>
@@ -276,36 +303,37 @@ export class CustomDrawerContent extends Component {
                     style={{
                       flexDirection: 'row',
                       padding: 5,
-                      backgroundColor: 'white',
-                      paddingLeft:20,
+                      backgroundColor: '#3B7457',
                     }}>
-                  <Icon 
-                  name="cube-outline" 
-                  iconStyle={{
-                    fontSize: 25,
-                    fontWeight: 'normal',
-                    paddingLeft: 15,
-                    paddingRight: 15,
-                    paddingTop: 3,
-                  }}
-                  size={23} color="black" />
+                    <Icon
+                      name="id-card"
+                      type="font-awesome"
+                      color="white"
+                      iconStyle={{
+                        fontSize: 18,
+                        fontWeight: 'normal',
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                        paddingTop: 8,
+                      }}
+                    />
                     <View style={styles.SeparatorLine} />
                     <Text
                       style={{
-                        paddingLeft: 20,
-                        paddingTop: 5,
+                        paddingLeft: 5,
+                        paddingTop: 8,
                         paddingBottom: 11,
-                        color: 'black',
+                        color: 'white',
                       }}>
-                      Boxes{' '}
+                      Boxes free{' '}
                     </Text>
                   </View>
-              
+                  {/* </TouchableOpacity> */}
                 </View>
               </CollapseHeader>
 
               <CollapseBody>
-            
+                {/* <Animatable.View animation="fadeInLeft"> */}
                 <Collapse>
                   <CollapseHeader>
                     <TouchableOpacity
@@ -321,15 +349,15 @@ export class CustomDrawerContent extends Component {
                           flexDirection: 'row',
                           padding: 5,
                           paddingLeft: 55,
-                          backgroundColor: '#F2F2F2',
+                          backgroundColor: '#4c8c6b',
                         }}>
                         <View style={styles.SeparatorLine} />
                         <Text
                           style={{
-                            paddingLeft: 20,
-                            paddingTop: 5,
+                            paddingLeft: 5,
+                            paddingTop: 8,
                             paddingBottom: 11,
-                            color: 'black',
+                            color: 'white',
                           }}>
                           Residential Boxes{' '}
                         </Text>
@@ -349,15 +377,15 @@ export class CustomDrawerContent extends Component {
                           flexDirection: 'row',
                           padding: 5,
                           paddingLeft: 55,
-                          backgroundColor: '#F2F2F2',
+                          backgroundColor: '#4c8c6b',
                         }}>
                         <View style={styles.SeparatorLine} />
                         <Text
                           style={{
-                            paddingLeft: 20,
-                            paddingTop: 5,
+                            paddingLeft: 5,
+                            paddingTop: 8,
                             paddingBottom: 11,
-                            color: 'black',
+                            color: 'white',
                           }}>
                           Commercial Boxes{' '}
                         </Text>
@@ -374,15 +402,15 @@ export class CustomDrawerContent extends Component {
                           flexDirection: 'row',
                           padding: 5,
                           paddingLeft: 55,
-                          backgroundColor: '#F2F2F2',
+                          backgroundColor: '#4c8c6b',
                         }}>
                         <View style={styles.SeparatorLine} />
                         <Text
                           style={{
-                            paddingLeft: 20,
-                            paddingTop: 5,
+                            paddingLeft: 5,
+                            paddingTop: 8,
                             paddingBottom: 11,
-                            color: 'black',
+                            color: 'white',
                           }}>
                           Home Appliance Boxes{' '}
                         </Text>
@@ -397,236 +425,32 @@ export class CustomDrawerContent extends Component {
             <TouchableOpacity
               style={[{paddingLeft: 10, paddingRight: 10, paddingTop: 2}]}
               activeOpacity={0.5}
-              onPress={() => this.props.navigation.navigate('Events')}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  padding: 5,
-                  backgroundColor: '457',
-                  marginLeft:15
-                }}>
-                  <Icon 
-                  name="images-outline" 
-                  iconStyle={{
-                    fontSize: 25,
-                    fontWeight: 'normal',
-                    paddingLeft: 15,
-                    paddingRight: 15,
-                    paddingTop: 3,
-                  }}
-                  size={23} color="black" />
-                <View style={styles.SeparatorLine} />
-                <Text
-                  style={{
-                    paddingLeft: 20,
-                    paddingTop: 5,
-                    paddingBottom: 11,
-                    color: 'black',
-                  }}>
-                 Events{' '}
-                </Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[{paddingLeft: 10, paddingRight: 10, paddingTop: 2}]}
-              activeOpacity={0.5}
-              onPress={() => this.props.navigation.navigate('Profile')}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  padding: 5,
-                  backgroundColor: '457',
-                  marginLeft:15
-                }}>
-                  <Icon 
-                  name="wallet-outline" 
-                  iconStyle={{
-                    fontSize: 25,
-                    fontWeight: 'normal',
-                    paddingLeft: 15,
-                    paddingRight: 15,
-                    paddingTop: 3,
-                  }}
-                  size={23} color="black" />
-                <View style={styles.SeparatorLine} />
-                <Text
-                  style={{
-                    paddingLeft: 20,
-                    paddingTop: 5,
-                    paddingBottom: 11,
-                    color: 'black',
-                  }}>
-                 My Points{' '}
-                </Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[{paddingLeft: 10, paddingRight: 10, paddingTop: 2}]}
-              activeOpacity={0.5}
-              onPress={() => this.props.navigation.navigate('WhereHouse')}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  padding: 5,
-                  backgroundColor: '457',
-                  marginLeft:15
-                }}>
-                  <Icon 
-                  name="card-outline" 
-                  iconStyle={{
-                    fontSize: 25,
-                    fontWeight: 'normal',
-                    paddingLeft: 15,
-                    paddingRight: 15,
-                    paddingTop: 3,
-                  }}
-                  size={23} color="black" />
-                <View style={styles.SeparatorLine} />
-                <Text
-                  style={{
-                    paddingLeft: 20,
-                    paddingTop: 5,
-                    paddingBottom: 11,
-                    color: 'black',
-                  }}>
-                 Loyalty Card{' '}
-                </Text>
-              </View>
-            </TouchableOpacity>
-            <View style={{borderBottomWidth:0.4,borderBottomColor:'black'}}></View>
-            <TouchableOpacity
-              style={[{paddingLeft: 10, paddingRight: 10, paddingTop: 2}]}
-              activeOpacity={0.5}
-              onPress={() => this.props.navigation.navigate('wherehouse')}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  padding: 5,
-                  backgroundColor: '457',
-                  marginLeft:15
-                }}>
-                  <Icon 
-                  name="call-outline" 
-                  iconStyle={{
-                    fontSize: 25,
-                    fontWeight: 'normal',
-                    paddingLeft: 15,
-                    paddingRight: 15,
-                    paddingTop: 3,
-                  }}
-                  size={23} color="black" />
-                <View style={styles.SeparatorLine} />
-                <Text
-                  style={{
-                    paddingLeft: 20,
-                    paddingTop: 5,
-                    paddingBottom: 11,
-                    color: 'black',
-                  }}>
-                 Contact{' '}
-                </Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[{paddingLeft: 10, paddingRight: 10, paddingTop: 2}]}
-              activeOpacity={0.5}
-              onPress={() => this.props.navigation.navigate('wherehouse')}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  padding: 5,
-                  backgroundColor: '457',
-                  marginLeft:15
-                }}>
-                  <Icon 
-                  name="grid-outline" 
-                  iconStyle={{
-                    fontSize: 25,
-                    fontWeight: 'normal',
-                    paddingLeft: 15,
-                    paddingRight: 15,
-                    paddingTop: 3,
-                  }}
-                  size={23} color="black" />
-                <View style={styles.SeparatorLine} />
-                <Text
-                  style={{
-                    paddingLeft: 20,
-                    paddingTop: 5,
-                    paddingBottom: 11,
-                    color: 'black',
-                  }}>
-                 About Us{' '}
-                </Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[{paddingLeft: 10, paddingRight: 10, paddingTop: 2}]}
-              activeOpacity={0.5}
-              onPress={() => this.props.navigation.navigate('wherehouse')}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  padding: 5,
-                  backgroundColor: '457',
-                  marginLeft:15
-                }}>
-                  <Icon 
-                  name="newspaper-outline" 
-                  iconStyle={{
-                    fontSize: 25,
-                    fontWeight: 'normal',
-                    paddingLeft: 15,
-                    paddingRight: 15,
-                    paddingTop: 3,
-                  }}
-                  size={23} color="black" />
-                <View style={styles.SeparatorLine} />
-                <Text
-                  style={{
-                    paddingLeft: 20,
-                    paddingTop: 5,
-                    paddingBottom: 11,
-                    color: 'black',
-                  }}>
-                 Terms and Conditions{' '}
-                </Text>
-              </View>
-            </TouchableOpacity>
-         
-            
-            <View style={{borderBottomWidth:0.4,borderBottomColor:'black'}}></View>
-
-            <TouchableOpacity
-              style={[{paddingLeft: 10, paddingRight: 10, paddingTop: 2}]}
-              activeOpacity={0.5}
               onPress={() => this.doLogout()}>
               <View
                 style={{
                   flexDirection: 'row',
                   padding: 5,
-                  backgroundColor: 'white',
-                  marginLeft:15
+                  backgroundColor: '#3B7457',
                 }}>
-                  
-                  <Icon 
-                  name="power-outline" 
+                <Icon
+                  name="sign-out"
+                  type="font-awesome"
+                  color="white"
                   iconStyle={{
                     fontSize: 25,
                     fontWeight: 'normal',
                     paddingLeft: 15,
                     paddingRight: 15,
-                    paddingTop: 3,
+                    paddingTop: 8,
                   }}
-                  size={23} color="black" />
-              
+                />
                 <View style={styles.SeparatorLine} />
                 <Text
                   style={{
-                    paddingLeft: 20,
-                    paddingTop: 5,
+                    paddingLeft: 5,
+                    paddingTop: 8,
                     paddingBottom: 11,
-                    color: 'black',
+                    color: 'white',
                   }}>
                   {this.state.login_title}{' '}
                 </Text>

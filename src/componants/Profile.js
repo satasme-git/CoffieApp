@@ -279,7 +279,7 @@ export class Profile extends Component {
       return (
         <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
           <CustomHeader
-            title=""
+            title="User Profile"
             isHome={true}
             bdcolor="#3B7457"
             bgcolor="#3B7457"

@@ -499,16 +499,7 @@ export default class Database {
     });
   }
 
-
-
-
-
-
-  
-
-
   cartCont(db) {
-    console.log("?????????????????????????????????? : "+db);
     return new Promise((resolve) => {
       let cart_count;
       db.transaction((tx) => {
@@ -866,56 +857,4 @@ export default class Database {
         });
     });
   }
-
-
-  boxcartCont(db) {
-    return new Promise((resolve) => {
-      let cart_count;
-      db.transaction((tx) => {
-        tx.executeSql('SELECT COUNT(cId) AS cartcount FROM cart_boxes', []).then(
-          ([tx, results]) => {
-            var len = results.rows.length;
-            for (let i = 0; i < len; i++) {
-              let row = results.rows.item(i);
-              const {cartcount} = row;
-              cart_count = cartcount;
-            }
-            resolve(cart_count);
-          },
-        );
-      })
-        .then((result) => {})
-        .catch((err) => {
-          console.log(err);
-        });
-    });
-  }
-
-
-  cartContnew(db) {
-    return new Promise((resolve) => {
-      let cart_countnew;
-      db.transaction((tx) => {
-        tx.executeSql('SELECT COUNT(cId) AS cartcount FROM cart', []).then(
-          ([tx, results]) => {
-            var len = results.rows.length;
-            for (let i = 0; i < len; i++) {
-              let row = results.rows.item(i);
-              const {cartcount} = row;
-              cart_countnew = cartcount;
-            }
-            resolve(cart_countnew);
-          },
-        );
-      })
-        .then((result) => {})
-        .catch((err) => {
-          console.log(err);
-        });
-    });
-  }
-
-
-
-
 }
