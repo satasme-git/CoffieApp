@@ -82,7 +82,7 @@ export class OrderHistory extends Component {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Text>oops! There's no data here</Text>
+        <Text>No orders</Text>
       </View>
     );
   };

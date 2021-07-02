@@ -89,9 +89,16 @@ export  class HomeAppliance extends Component {
 
   }
 
-  componentDidMount() {
-    this.getFoodById();
-    this.getFirstFood();
+ async componentDidMount() {
+  const {navigation} = this.props;
+    this._unsubscribe = navigation.addListener('focus', () => {
+      this.getFoodById();
+      this.getFirstFood();
+    });
+  }
+  componentWillUnmount() {
+    // Remove the event listener
+    this._unsubscribe();
   }
   checkToken = async () => {
     const token = await AsyncStorage.getItem('cus_id');
@@ -138,7 +145,7 @@ export  class HomeAppliance extends Component {
       });
   }
   getFoodById() {
-    fetch('https://satasmemiy.tk/admin/boxes/', {
+    fetch('https://satasmemiy.tk/public/admin/boxes', {
       method: 'get',
       header: {
         Accept: 'application/json',
@@ -307,9 +314,9 @@ export  class HomeAppliance extends Component {
     let {isLoading} = this.state;
     const {loading, token, success, response} = this.state;
 
-    if (isLoading) {
-      return <BarIndicator color="#00897b" />;
-    } else {
+    // if (isLoading) {
+    //   return <BarIndicator color="#00897b" />;
+    // } else {
       return (
         <SafeAreaView style={{flex: 1, backgroundColor: '#F2F2F2'}}>
           <StatusBar barStyle="light-content" backgroundColor="#3B7457" />
@@ -318,7 +325,7 @@ export  class HomeAppliance extends Component {
               <View animatedValue={animatedValue}>
                 {/* <Text>asdasdad</Text> */}
                 <CustomHeader
-                  title="Boxes free"
+                  title="Boxes"
                   // isPost={false}
                   isPost={2}
                   isHome={true}
@@ -515,7 +522,7 @@ export  class HomeAppliance extends Component {
         </SafeAreaView>
       );
     }
-  }
+  // }
 }
 const styles = StyleSheet.create({
   container: {

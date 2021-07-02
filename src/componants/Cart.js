@@ -308,9 +308,6 @@ export class Cart extends PureComponent {
       });
   }
   async componentDidMount() {
-
-  
-   
     LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
     const myArray = await AsyncStorage.getItem('cus_id');
@@ -932,12 +929,12 @@ export class Cart extends PureComponent {
                         {
                           backgroundColor: '#00897b',
                           borderRadius: 15,
-                          width: '89%',
+                          width: '105%',
                           borderColor: 'white',
                           color: '#ccc',
                           padding: 15,
                           borderWidth: 1,
-                          paddingHorizontal: 82,
+                          // paddingHorizontal: 80,
                         })
                       }
                       onPress={() => this.setRbsheet_height()}
@@ -956,12 +953,12 @@ export class Cart extends PureComponent {
                             {
                               backgroundColor: 'red',
                               borderRadius: 15,
-                              width: '92%',
+                              width: '115%',
                               borderColor: 'white',
                               color: '#ccc',
                               padding: 15,
                               borderWidth: 1,
-                              paddingHorizontal: 82,
+                              // paddingHorizontal: 82,
                             })
                           }
                           onPress={this.doPayment}

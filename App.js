@@ -226,6 +226,7 @@ const WherehouseScreen = ({navigation}) => (
   </Wherehouse.Navigator>
 );
 
+
 const AboutUsScreen = ({navigation}) => (
   <AboutUss.Navigator>
     <AboutUss.Screen

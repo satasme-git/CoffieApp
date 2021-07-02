@@ -88,7 +88,7 @@ export class SignIn extends Component {
                   //   {text: 'OK', onPress: () => console.log('OK Pressed')},
                   // ]);
                   Alert.alert(
-                    'Sussess', 'You are successfully logged', [
+                    'Success', 'You are successfully logged', [
                     {text: 'OK', onPress: () => console.log('OK Pressed')},
                   ]);
                   this.props.navigation.navigate('wherehouse');
@@ -120,7 +120,7 @@ export class SignIn extends Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <FlashMessage duration={1000} />
+        <FlashMessage id={2} duration={1000} />
        
         <StatusBar
           barStyle="light-content"
@@ -290,7 +290,7 @@ export class SignIn extends Component {
                     <Text
                       style={{color: 'yellow'}}
                       onPress={() => this.props.navigation.navigate('SignUp')}>
-                      {' '}
+                     
                       create new Account
                     </Text>
                   </Text>

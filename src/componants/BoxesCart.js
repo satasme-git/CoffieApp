@@ -11,17 +11,15 @@ import {
   Alert,
   TextInput,
   ActivityIndicator,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import {List, ListItem, Left, Body, Right} from 'native-base';
-import {Icon, Avatar} from 'react-native-elements';
+import {Icon, Avatar, Button} from 'react-native-elements';
 import {FlatList} from 'react-native-gesture-handler';
 import * as Animatable from 'react-native-animatable';
 import Database from '../Database';
-
 import {parse} from 'react-native-svg';
-import {Button} from 'react-native-elements';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import AsyncStorage from '@react-native-community/async-storage';
 import {SCLAlert, SCLAlertButton} from 'react-native-scl-alert';
@@ -103,21 +101,21 @@ export class BoxesCart extends PureComponent {
       cart_details: '',
       _payment_method: 'Cash',
       pressed: false,
-      _category:'',
+      _category: '',
+      emptyCartButton: false,
     };
     db.initDB().then((result) => {
       this.loadDbVarable(result);
     });
     this.loadDbVarable = this.loadDbVarable.bind(this);
   }
-  
+
   showAlert = () => {
     this.setState({
       showAlert: true,
     });
   };
   changeSML(value) {
-
     var smlval = value;
 
     if (value == 1) {
@@ -161,32 +159,40 @@ export class BoxesCart extends PureComponent {
   }
 
   getCartData() {
-    let {bPrice, result, total = 0,category} = this.props;
+    let {bPrice, result, total = 0, category} = this.props;
     db.listBoxCartData(this.state.dbs)
       .then((results) => {
         result = results;
-
-        var jsonTextValues = [];
-        result.map((item, index) => {
-          jsonTextValues.push({
-            label: item.bId,
-            value: item.bName,
+      
+        if (result == 0) {
+          this.setState({
+            isLoading: false,
+            emptyCartButton: true,
+            _list_elimination: results,
+            _total: total,
           });
-        });
+        } else {
+          var jsonTextValues = [];
+          result.map((item, index) => {
+            jsonTextValues.push({
+              label: item.bId,
+              value: item.bName,
+            });
+          });
 
-        for (var i = 0; i < result.length; i++) {
-          bPrice = result[i].bPrice;
-          total += parseFloat(bPrice);
-          category = result[i].bCategory;
-          
+          for (var i = 0; i < result.length; i++) {
+            bPrice = result[i].bPrice;
+            total += parseFloat(bPrice);
+            category = result[i].bCategory;
+          }
+
+          this.setState({
+            isLoading: false,
+            _list_elimination: results,
+            _total: total,
+            _category: category,
+          });
         }
-
-        this.setState({
-          isLoading: false,
-          _list_elimination: results,
-          _total: total,
-          _category: category,
-        });
       })
       .catch((err) => {
         console.log(err);
@@ -208,7 +214,6 @@ export class BoxesCart extends PureComponent {
       });
   }
   addItem(id, price, qty) {
-
     var price1 = price * (qty + 1);
     let data = {
       bQty: this.state._pQty,
@@ -261,12 +266,10 @@ export class BoxesCart extends PureComponent {
       isLoading: false,
       _cus_id: myArray,
     });
-    
   }
 
-  cardDetailsWrong(){
+  cardDetailsWrong() {
     this.handleOpen2();
-
   }
 
   doPayment = async () => {
@@ -291,7 +294,6 @@ export class BoxesCart extends PureComponent {
           // amount: Math.floor(this.state._total * 100),
           // currency: 'usd',
           // token: this.state.token,
-       
         }),
       },
     )
@@ -306,7 +308,7 @@ export class BoxesCart extends PureComponent {
 
         if (responseJson.status == 'succeeded') {
           this.emptyCartData();
-        }else{
+        } else {
           this.cardDetailsWrong();
         }
       })
@@ -316,13 +318,7 @@ export class BoxesCart extends PureComponent {
       });
   };
 
-
-
-
-
-
   emptyCartData() {
-
     this.cart_data();
     db.deleteBoxCartData(this.state.dbs)
       .then((result) => {})
@@ -345,7 +341,7 @@ export class BoxesCart extends PureComponent {
   //   });
   // }
   cart_data = async () => {
-    let qty,bQty,bPrice,id;
+    let qty, bQty, bPrice, id;
     let order_id =
       new Date().getMonth() +
       '' +
@@ -368,18 +364,15 @@ export class BoxesCart extends PureComponent {
         cus_id: this.state._cus_id,
         order_total: this.state._total,
         payment_method: this.state._payment_method,
-        bCategory:this.state._category,
-        result:this.state._list_elimination,
+        bCategory: this.state._category,
+        result: this.state._list_elimination,
       }),
     })
       .then((response) => response.json())
       .then((responseJson) => {
-       
         for (var i = 0; i < this.state._list_elimination.length; i++) {
           id = this.state._list_elimination[i].bId;
-
         }
-      
       })
       .catch((error) => {
         console.error(error);
@@ -446,7 +439,6 @@ export class BoxesCart extends PureComponent {
     // console.log('token is ' + JSON.stringify(token))
   };
 
-
   renderItem = ({item}) => {
     return (
       <Animatable.View animation="flipInX">
@@ -476,10 +468,35 @@ export class BoxesCart extends PureComponent {
               />
             </View>
           </Left>
-          <Body style={{marginLeft: -60}}>
-            <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold'}}>
-              {item.bTitle}
-            </Text>
+          <Body style={{marginLeft: -120}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginBottom: 3,
+              }}>
+              <Text style={{color: 'black', fontSize: 16, fontWeight: 'bold',width:'72%'}}>
+                {item.bTitle}
+              </Text>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#ff4081',
+                  width: 65,
+                  height:31,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  padding: 5,
+                  borderRadius: 20,
+                  alignItems: 'center',
+                  right: -10,
+                }}
+                onPress={() => {
+                  this.deleteData(item.cId);
+                }}>
+                <Text style={{color: 'white'}}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+
             <Text
               numberOfLines={2}
               ellipsizeMode="tail"
@@ -561,7 +578,7 @@ export class BoxesCart extends PureComponent {
               />
             </View>
           </Body>
-          <Right style={{bottom: 40}}>
+          {/* <Right style={{bottom: 40}}>
             <View>
               <TouchableOpacity
                 style={{
@@ -580,7 +597,7 @@ export class BoxesCart extends PureComponent {
                 <Text style={{color: 'white'}}>Cancel</Text>
               </TouchableOpacity>
             </View>
-          </Right>
+          </Right> */}
         </ListItem>
       </Animatable.View>
     );
@@ -653,7 +670,7 @@ export class BoxesCart extends PureComponent {
           backgroundColor="#fff"
         />
         <View style={{flex: 1}}>
-        <Modal
+          <Modal
             isVisible={this.state.modalVisible}
             // isVisible={true}
 
@@ -714,7 +731,8 @@ export class BoxesCart extends PureComponent {
                 style={styles.field}
                 disabled={false}
                 onParamsChange={this.handleFieldParamsChange}
-                editable={false} selectTextOnFocus={false}
+                editable={false}
+                selectTextOnFocus={false}
               />
               {this.state.indicatorShow == true ? (
                 <ActivityIndicator
@@ -751,7 +769,6 @@ export class BoxesCart extends PureComponent {
             </View>
           </Modal>
 
-
           <View style={{marginLeft: 20, marginTop: 30}}>
             <Text style={{fontSize: 20, fontWeight: 'bold'}}>My Order</Text>
           </View>
@@ -780,7 +797,7 @@ export class BoxesCart extends PureComponent {
                   borderTopRightRadius: 20,
                 }}>
                 <View style={{padding: 10, flexDirection: 'row'}}>
-                  <View style={{flexDirection: 'column',width:120}}>
+                  <View style={{flexDirection: 'column', width: 120}}>
                     <Text
                       style={{
                         paddingLeft: 13,
@@ -796,17 +813,40 @@ export class BoxesCart extends PureComponent {
                         fontWeight: 'bold',
                         fontSize: 18,
                       }}>
-                      A${Math.floor(this.state._total*100)/100}
+                      A${Math.floor(this.state._total * 100) / 100}
                     </Text>
                   </View>
 
                   {token == null ? (
-                    <TouchableOpacity
-                      style={styles.buttonstyle}
-                      loading={loading}
-                      onPress={() => this.setRbsheet_height()}>
-                      <Text style={{color: 'white'}}>Check out</Text>
-                    </TouchableOpacity>
+                    // <TouchableOpacity
+                    //   style={styles.buttonstyle}
+                    //   loading={loading}
+                    //   disabled={this.state.emptyCartButton}
+                    //   onPress={() => this.setRbsheet_height()}>
+                    //   <Text style={{color: 'white'}}>Check out</Text>
+                    // </TouchableOpacity>
+
+                    <Button
+                      // loading={loading}
+                      title="Check out"
+                      activeOpacity={0.5}
+                      disabled={this.state.emptyCartButton}
+                      titleStyle={{color: 'white'}}
+                      buttonStyle={
+                        (styles.submitText,
+                        {
+                          backgroundColor: '#00897b',
+                          borderRadius: 15,
+                          width: '105%',
+                          borderColor: 'white',
+                          color: '#ccc',
+                          padding: 15,
+                          borderWidth: 1,
+                          // paddingHorizontal: 82,
+                        })
+                      }
+                      onPress={() => this.setRbsheet_height()}
+                    />
                   ) : (
                     <View>
                       {token && (
@@ -821,12 +861,12 @@ export class BoxesCart extends PureComponent {
                             {
                               backgroundColor: 'red',
                               borderRadius: 15,
-                              width: '92%',
+                              width: '115%',
                               borderColor: 'white',
                               color: '#ccc',
                               padding: 15,
                               borderWidth: 1,
-                              paddingHorizontal: 82,
+                              // paddingHorizontal: 82,
                             })
                           }
                           onPress={this.doPayment}
@@ -955,7 +995,8 @@ const styles = StyleSheet.create({
   text: {
     color: '#fff',
     fontSize: 15,
-  }, field: {
+  },
+  field: {
     width: 300,
     color: '#449aeb',
     borderColor: '#787878',

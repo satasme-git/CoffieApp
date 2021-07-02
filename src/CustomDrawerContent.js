@@ -37,7 +37,10 @@ export class CustomDrawerContent extends Component {
     this._unsubscribe = navigation.addListener('focus', () => {
         this.loadVal();
         this.getoprofileDetails();
+        console.log(">>>>>>>>>>>>>>>>>>>>>>> log : "+this.state.abc);
     });
+    this.getoprofileDetails();
+    this.loadVal();
   }
 
   componentWillUnmount() {

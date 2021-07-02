@@ -303,7 +303,7 @@ export class MainHome extends Component {
       return (
         <View style={{backgroundColor: '#F2F2F2', height: 220}}>
           <View
-            style={{backgroundColor: '#3B7457', height: 130, elevation: 10}}>
+            style={{backgroundColor: '#3B7457', height: 80, elevation: 10}}>
             <View style={{marginLeft: 20, marginBottom: 10, marginTop: -5}}>
               <Text style={{fontWeight: 'bold', fontSize: 32, color: 'white'}}>
                 Welcome To
@@ -319,7 +319,7 @@ export class MainHome extends Component {
             </View>
 
             <View style={{marginTop: 0, paddingLeft: 15, paddingRight: 15}}>
-              <View
+              {/* <View
                 style={{
                   alignItems: 'center',
                   flexDirection: 'row',
@@ -343,7 +343,7 @@ export class MainHome extends Component {
                   onEndEditing={this.clearFocus}
                   autoFocus={false}
                 />
-              </View>
+              </View> */}
             </View>
           </View>
           <View style={{marginTop: 30}}>
@@ -381,8 +381,8 @@ export class MainHome extends Component {
       return (
         <ParallaxScroll
           renderHeader={({animatedValue}) => (
-            <View style={{backgroundColor: 'red', height: 130}}>
-              <View style={{backgroundColor: '#3B7457', height: 130}}>
+            <View style={{backgroundColor: 'red', height: 80}}>
+              <View style={{backgroundColor: '#3B7457', height: 80}}>
                 <View style={{marginLeft: 20, marginBottom: 10, marginTop: -5}}>
                   <Text
                     style={{fontWeight: 'bold', fontSize: 32, color: 'white'}}>
@@ -398,7 +398,7 @@ export class MainHome extends Component {
                   </Text>
                 </View>
                 <View style={{marginTop: 0, paddingLeft: 15, paddingRight: 15}}>
-                  <View
+                  {/* <View
                     style={{
                       alignItems: 'center',
                       flexDirection: 'row',
@@ -421,14 +421,14 @@ export class MainHome extends Component {
                       onEndEditing={this.clearFocus}
                       autoFocus={false}
                     />
-                  </View>
+                  </View> */}
                 </View>
               </View>
             </View>
           )}
-          headerHeight={130}
+          headerHeight={80}
           isHeaderFixed={false}
-          parallaxHeight={130}
+          parallaxHeight={80}
           parallaxBackgroundScrollSpeed={5}
           parallaxForegroundScrollSpeed={2.5}>
           <View style={{height: 780}}>

@@ -76,6 +76,7 @@ export  class BoxessFree extends Component {
       _qty: 1,
       _box_id: 1,
       dbs: '',
+      emptyCartButton: true,
     };
     db.initDB().then((result) => {
       this.loadDbVarable(result);
@@ -129,7 +130,7 @@ export  class BoxessFree extends Component {
           _description: description,
           _box_image: image,
           _price: Price,
-
+          emptyCartButton: false,
         });
  
       })
@@ -150,6 +151,7 @@ export  class BoxessFree extends Component {
         this.setState({
           isLoading: false,
           box_data: responseJson,
+          // emptyCartButton: false,
         });
       })
       .catch((error) => {
@@ -318,7 +320,7 @@ export  class BoxessFree extends Component {
               <View animatedValue={animatedValue}>
                 {/* <Text>asdasdad</Text> */}
                 <CustomHeader
-                  title="Boxes free"
+                  title="Boxes"
                   // isPost={false}
                   isPost={2}
                   isHome={true}
@@ -468,20 +470,42 @@ export  class BoxessFree extends Component {
             <View
               style={{
                 padding: 15,
-                flexDirection: 'row',
+                // flexDirection: 'row',
               }}>
              
 
               {token == null ? (
               
-                <TouchableOpacity
-                  style={styles.buttonstyle}
-                  loading={loading}
-                  onPress={this.addToCart}
-                  // onPress={this.setRbsheet_height()}
-                >
-                  <Text style={{color: 'white'}}>Make Order</Text>
-                </TouchableOpacity>
+              <Button
+              // loading={loading}
+              title="Make Order"
+              activeOpacity={0.5}
+              disabled={this.state.emptyCartButton}
+              titleStyle={{color: 'white'}}
+              buttonStyle={
+                (styles.submitText,
+                {
+                  backgroundColor: '#00897b',
+                  borderRadius: 15,
+                  width: '100%',
+                  borderColor: 'white',
+                  color: '#ccc',
+                  padding: 15,
+                  borderWidth: 1,
+                  // paddingHorizontal: 130,
+                })
+              }
+              onPress={this.addToCart}
+            />
+
+                // <TouchableOpacity
+                //   style={styles.buttonstyle}
+                //   loading={loading}
+                //   onPress={this.addToCart}
+             
+                // >
+                //   <Text style={{color: 'white'}}>Make Order</Text>
+                // </TouchableOpacity>
               ) : (
                 <View>
                   {token && (

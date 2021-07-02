@@ -19,7 +19,10 @@ import {IMAGE} from '../constants/image';
 import {CustomHeader} from '../index';
 import QRCode from 'react-native-qrcode-generator';
 import AsyncStorage from '@react-native-community/async-storage';
+// import FlashMessage, {showMessage} from 'react-native-flash-message';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
+import Toast from 'react-native-simple-toast';
+
 import {Button} from 'react-native-elements';
 export class SignUp extends Component {
   constructor(props) {
@@ -29,7 +32,7 @@ export class SignUp extends Component {
       TextInputEmail: '',
       TextInputPhone: '',
       TextInputPassword: '',
-
+      loading: false,
       showAlert: false,
     };
   }
@@ -51,59 +54,181 @@ export class SignUp extends Component {
   }
 
   InputUsers = () => {
+   
+
     const {TextInputName} = this.state;
     const {TextInputEmail} = this.state;
     const {TextInputPhone} = this.state;
     const {TextInputPassword} = this.state;
 
-    fetch('https://satasmemiy.tk/register', {
-      method: 'post',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        cus_name: TextInputName,
-        cus_email: TextInputEmail,
-        cus_mobile_number: TextInputPhone,
-        cus_password: TextInputPassword,
-      }),
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        this.setState(
-          {
-            isLoading: false,
-          },
-          function () {},
-        );
+    if (
+      TextInputName == '' ||
+      TextInputEmail == '' ||
+      TextInputPassword == '' ||
+      TextInputPhone == ''
+    ) {
+       Toast.show('All fields must be filled', Toast.SHORT, [
+      'UIAlertController',
+      
+    ]);
+      // Toast.showWithGravity('All fields must be filled', Toast.LONG, Toast.BOTTOM);
+      // if (TextInputPhone == '') {
+     
+      //   Toast.showWithGravity('Please enter phone number', Toast.LONG, Toast.BOTTOM);
+      //   this.setState({
+      //     optionError: 'Please select an option first',
+      //     errorFound: 'true',
+      //   });
+      // } else {
+      //   this.setState({
+      //     optionError: '',
+      //     errorFound: '',
+      //   });
+      // }
+      // if (TextInputPassword == '') {
+      //   Toast.showWithGravity('Please enter password.', Toast.LONG, Toast.BOTTOM);
+     
+      //   this.setState({
+      //     pwError: 'Please enter password',
+      //     errorFound: 'true',
+      //   });
+      // } else {
+      //   this.setState({
+      //     pwError: '',
+      //     errorFound: '',
+      //   });
+      // }
 
-        let id = responseJson.userid;
-
-        // Alert.alert('Register success' );
-
-        if (responseJson.userid != undefined) {
-          AsyncStorage.setItem('memberNames', TextInputName).then(
-            (responseJson) => {
-              this.props.navigation.navigate('wherehouse');
-            },
-          );
-          AsyncStorage.setItem('memberId', '' + responseJson.userid);
-        } else {
-          showMessage({
-            message: 'Registration fail Fail',
-            description: 'Username or password incorrect',
-            backgroundColor: 'red',
-          });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
+      // if (TextInputEmail == '') {
+      //   Toast.showWithGravity('Please enter email.', Toast.LONG, Toast.BOTTOM);
+       
+      //   this.setState({
+      //     emailError: 'Please enter email',
+      //     errorFound: 'true',
+      //   });
+      // } else {
+      //   this.setState({
+      //     emailError: '',
+      //     errorFound: '',
+      //   });
+      // }
+      // if (TextInputName == '') {
+     
+       
+      //   this.setState({
+      //     unameError: 'Please enter user name',
+      //     errorFound: 'true',
+      //   });
+      // } else {
+      //   this.setState({
+      //     unameError: '',
+      //     errorFound: '',
+      //   });
+      // }
+    } else {
+     
+      this.setState({
+        unameError: '',
+        optionError: '',
+        emailError: '',
+        mobileError: '',
+        pwError: '',
       });
+
+      let emailValidateregex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      let mobileValidateregex = /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/;
+      if (emailValidateregex.test(TextInputEmail) == true) {
+        this.setState({
+          emailError: '',
+          errorFound: '',
+        });
+
+        // if (this.state.errorFound != 'false' && this.state.errorFound == '') {
+          this.setState({
+            loading: true,
+          });
+
+          fetch('https://satasmemiy.tk/register', {
+            method: 'post',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              cus_name: TextInputName,
+              cus_email: TextInputEmail,
+              cus_mobile_number: TextInputPhone,
+              cus_password: TextInputPassword,
+            }),
+          })
+            .then((response) => response.json())
+            .then((responseJson) => {
+              this.setState(
+                {
+                  isLoading: false,
+                  loading: true,
+                },
+                function () {},
+              );
+
+              let id = responseJson.userid;
+
+              Alert.alert('Register success' );
+
+              if (responseJson.userid != undefined) {
+                AsyncStorage.setItem('memberNames', TextInputName).then(
+                  (responseJson) => {
+                    this.props.navigation.navigate('wherehouse');
+                  },
+                );
+                AsyncStorage.setItem('memberId', '' + responseJson.userid);
+              } else {
+                showMessage({
+                  message: 'Registration fail Fail',
+                  description: 'Username or password incorrect',
+                  backgroundColor: 'red',
+                });
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+
+
+
+            
+        //   this.state.errorFound = 'false';
+        // }
+      } else {
+        Toast.show('Email address is invalid');
+      
+        this.setState({
+          emailError: 'Invalid email',
+          errorFound: 'true',
+        });
+      }
+    }
   };
+   componentDidMount(){
+   
+    // Toast.show('This is a toast.');
+    // Toast.show('This is a long toast.', Toast.LONG);
+    
+    // Toast.showWithGravity('This is a long toast at the top.', Toast.LONG, Toast.TOP);
+    
+    // Toast.show('This is nicely visible even if you call this when an Alert is shown', Toast.SHORT, [
+    //   'UIAlertController',
+    // ]);
+   
+  }
+ 
+  
   render() {
+    const {loading} = this.state;
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+         {/* <FlashMessage id={1} duration={1000} /> */}
+        
         <StatusBar
           barStyle="dark-content"
           hidden={false}
@@ -115,7 +240,7 @@ export class SignUp extends Component {
           bdcolor="#fff"
           navigation={this.props.navigation}
         />
-        <FlashMessage duration={1000} />
+      
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
@@ -126,6 +251,7 @@ export class SignUp extends Component {
               paddingHorizontal: 15,
               paddingVertical: 0,
             }}>
+              
             <View style={{flex: 1, justifyContent: 'center'}}>
               <Text
                 style={{
@@ -143,12 +269,7 @@ export class SignUp extends Component {
                 Create An Account
               </Text>
             </View>
-            {/* <View style={{justifyContent:'center',alignItems:'center'}}>
-              <Image style={{ width: 210, height: 190, marginLeft: 0 }}
-                source={IMAGE.ICON_LOG}
-                resizeMode="contain"
-              />
-            </View> */}
+      
             <Animatable.View animation="fadeInUp">
               <Text
                 style={{
@@ -224,6 +345,8 @@ export class SignUp extends Component {
                 placeholder="Enter Mobile Number"
                 onEndEditing={this.clearFocus}
                 autoFocus={false}
+                keyboardType="numeric"
+                maxLength={10}
               />
               <Text
                 style={{
@@ -252,23 +375,11 @@ export class SignUp extends Component {
                 autoFocus={false}
               />
 
-              {/* <TouchableOpacity
-                activeOpacity={1.0}
-                ref="touchableOpacity"
-                style={{marginTop: 40}}
-                onPress={this.InputUsers}>
-         
-                <LinearGradient
-                  colors={['#009984', '#00554D']}
-                  start={{x: 0, y: 1}}
-                  end={{x: 1, y: 0.9}}
-                  style={styles.linearGradient}>
-                  <Text style={styles.buttonText}>Sign Up</Text>
-                </LinearGradient>
-              </TouchableOpacity> */}
+            
 
               <Button
                 title="Sign Up"
+                   loading={loading}
                 activeOpacity={0.5}
                 titleStyle={{color: 'white'}}
                 buttonStyle={
@@ -282,53 +393,18 @@ export class SignUp extends Component {
                     padding: 15,
                     borderWidth: 1,
                     paddingHorizontal: 82,
-                    marginTop:40,
+                    marginTop: 40,
                   })
                 }
                 onPress={this.InputUsers}
               />
 
-              {/* <TouchableOpacity onPress={() => this.props.navigation.navigate('PeriodCalandar')}>
-                   
-                        <View style={[{ alignItems: "center", }, styles.touchableopacity]} >
-                        <View style={[{ height: 90, padding: 20, backgroundColor: '#fff', borderRadius: 50 },styles.shaddow]}>
-                                <Image source={IMAGE.ICON_INVESTMENT}
-                                    style={{ height: 55, width: 55 }}
-                                >
-                                </Image>
-                            </View>
-                            <Text style={{ marginTop: 5, color: '#000' }}>Invest</Text>
-                        </View>
-                    </TouchableOpacity> */}
-
-              {/* <TouchableHighlight style={{backgroundColor:'green',height:50}} onPress={() => this.props.navigation.navigate('TestScreen')}>
-                <Text style={styles.text}>
-                  Button
-            </Text>
-              </TouchableHighlight> */}
+              
             </Animatable.View>
-            {/* <TextInput
-              style={styles.input}
-              onChangeText={(text) => this.setState({ text: text })}
-              value={this.state.text}
-            />
-            <QRCode
-              value={this.state.text}
-              size={200}
-              bgColor='black'
-              fgColor='white' /> */}
+          
           </View>
         </ScrollView>
-        {/* <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text>test!</Text>
-          <TouchableOpacity style={{ marginTop: 20 }}
-            onPress={() => this.props.navigation.navigate('TestScreen')}
-
-          >
-            <Text>Sign IN</Text>
-   
-          </TouchableOpacity>
-        </View> */}
+    
       </SafeAreaView>
     );
   }

@@ -30,9 +30,9 @@ const styles = StyleSheet.create({
 
 let aaa = 0;
 export class CustomHeader extends Component {
-  state = {
-    _cart_count: 0,
-  };
+  // state = {
+  //   _cart_count: 0,
+  // };
 
   constructor(props) {
     super(props);
@@ -43,6 +43,7 @@ export class CustomHeader extends Component {
       vale: 66,
       cart_qty: this.props.navigation.navigate.cart_qty,
       dbs: '',
+      _cart_count: 0,
     };
     db.initDB().then((result) => {
       this.loadDbVarable(result);
@@ -56,15 +57,34 @@ export class CustomHeader extends Component {
     });
   }
 
+  async componentDidMount() {
+    const {navigation} = this.props;
+    this._unsubscribe = navigation.addListener('focus', () => {
+      this.loadData();
+    });
+  }
   componentWillUnmount() {
-    db.cartCont(this.state.dbs)
+    // Remove the event listener
+    this._unsubscribe();
+  }
+
+  loadData() {
+    db.boxcartCont(this.state.dbs)
       .then((data) => {
         let cart_count = data;
+        
+        this.setState({
+          isLoading: false,
+          _cart_count: cart_count,
+        });
+
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>cart count is ; : "+cart_count);
       })
       .catch((err) => {
         console.log(err);
       });
   }
+
   render() {
     let {
       navigation,
@@ -95,7 +115,6 @@ export class CustomHeader extends Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 marginLeft: 10,
-
               }}
               onPress={() => this.props.navigation.openDrawer()}>
               <Icon
@@ -103,7 +122,12 @@ export class CustomHeader extends Component {
                 name="bars"
                 type="font-awesome"
                 color="white"
-                iconStyle={{fontSize: 22, fontWeight: '100',padding:10,borderRadius:20}}
+                iconStyle={{
+                  fontSize: 22,
+                  fontWeight: '100',
+                  padding: 10,
+                  borderRadius: 20,
+                }}
                 onPress={() => navigation.openDrawer()}
               />
               {/* <Image style={{ width: 28, height: 28, marginLeft: 0,padding:4 }}
@@ -144,7 +168,13 @@ export class CustomHeader extends Component {
         </View>
 
         <View style={{flex: 1, justifyContent: 'center'}}>
-          <Text style={{textAlign: 'center', fontSize: 17, fontWeight: 'bold',color:'white'}}>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: 17,
+              fontWeight: 'bold',
+              color: 'white',
+            }}>
             {title}
           </Text>
         </View>
@@ -194,11 +224,11 @@ export class CustomHeader extends Component {
                   color="white"
                   iconStyle={{fontSize: 30, fontWeight: 'normal'}}
                 />
-                {/* <Badge
+                <Badge
                   status="error"
-                  value={cart_qty}
+                  value={this.state._cart_count}
                   containerStyle={{position: 'absolute', left: 55, top: 5}}
-                /> */}
+                />
               </View>
             </TouchableOpacity>
           ) : null}
