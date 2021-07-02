@@ -89,16 +89,9 @@ export  class HomeAppliance extends Component {
 
   }
 
- async componentDidMount() {
-  const {navigation} = this.props;
-    this._unsubscribe = navigation.addListener('focus', () => {
-      this.getFoodById();
-      this.getFirstFood();
-    });
-  }
-  componentWillUnmount() {
-    // Remove the event listener
-    this._unsubscribe();
+  componentDidMount() {
+    this.getFoodById();
+    this.getFirstFood();
   }
   checkToken = async () => {
     const token = await AsyncStorage.getItem('cus_id');
@@ -145,7 +138,7 @@ export  class HomeAppliance extends Component {
       });
   }
   getFoodById() {
-    fetch('https://satasmemiy.tk/public/admin/boxes', {
+    fetch('https://satasmemiy.tk/admin/boxes/', {
       method: 'get',
       header: {
         Accept: 'application/json',
@@ -314,9 +307,9 @@ export  class HomeAppliance extends Component {
     let {isLoading} = this.state;
     const {loading, token, success, response} = this.state;
 
-    // if (isLoading) {
-    //   return <BarIndicator color="#00897b" />;
-    // } else {
+    if (isLoading) {
+      return <BarIndicator color="#00897b" />;
+    } else {
       return (
         <SafeAreaView style={{flex: 1, backgroundColor: '#F2F2F2'}}>
           <StatusBar barStyle="light-content" backgroundColor="#3B7457" />
@@ -325,7 +318,7 @@ export  class HomeAppliance extends Component {
               <View animatedValue={animatedValue}>
                 {/* <Text>asdasdad</Text> */}
                 <CustomHeader
-                  title="Boxes"
+                  title="Boxes free"
                   // isPost={false}
                   isPost={2}
                   isHome={true}
@@ -343,7 +336,7 @@ export  class HomeAppliance extends Component {
             fadeOutParallaxForeground={true}
             renderParallaxBackground={({animatedValue}) => (
               <View animatedValue={animatedValue}>
-                <View style={{backgroundColor: '#3B7457', padding: 60}}>
+                <View style={{backgroundColor: '#009ae4', padding: 60}}>
                   <ImageBackground
                     source={{
                       uri:
@@ -422,8 +415,8 @@ export  class HomeAppliance extends Component {
                     <Text
                       style={{
                         fontWeight: 'bold',
-                        fontSize: 30,
-                        color: 'black',
+                        fontSize: 38,
+                        color: 'red',
                         marginTop: -2,
                       }}>
                       A${' '}
@@ -522,7 +515,7 @@ export  class HomeAppliance extends Component {
         </SafeAreaView>
       );
     }
-  // }
+  }
 }
 const styles = StyleSheet.create({
   container: {
@@ -547,7 +540,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonstyle: {
-    backgroundColor: '#3B7457',
+    backgroundColor: '#009ae4',
     borderRadius: 15,
     width: '100%',
     padding: 20,

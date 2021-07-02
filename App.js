@@ -11,13 +11,12 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Avatar, Badge} from 'react-native-elements';
+import {Avatar, Icon, Badge} from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import Icon from 'react-native-vector-icons/Ionicons';
 LogBox.ignoreAllLogs(true);
 
 import {
@@ -51,7 +50,9 @@ import {
   BoxOrders,
   CommercialBoxes,
   HomeAppliance,
-  BoxessFree
+  BoxessFree,
+  ForgotPw,
+  ForgotPwScreen
 } from './src/componants';
 
 import {CartComponant} from './src';
@@ -206,7 +207,7 @@ const WherehouseScreen = ({navigation}) => (
           <TouchableOpacity
             style={{flexDirection: 'row', alignItems: 'center', marginLeft: 10}}
             onPress={() => navigation.openDrawer()}>
-            {/* <Icon
+            <Icon
               // raised
               name="bars"
               type="font-awesome"
@@ -218,14 +219,7 @@ const WherehouseScreen = ({navigation}) => (
                 borderRadius: 20,
               }}
               // onPress={() => navigation.openDrawer()}
-            /> */}
-            <Icon 
-          name="menu-outline" 
-          iconStyle={{
-            fontWeight: 'normal',
-          }}
-          onPress={() => navigation.openDrawer()}
-          size={28} color='white' />
+            />
           </TouchableOpacity>
         ),
       }}
@@ -233,7 +227,6 @@ const WherehouseScreen = ({navigation}) => (
     />
   </Wherehouse.Navigator>
 );
-
 
 const AboutUsScreen = ({navigation}) => (
   <AboutUss.Navigator>
@@ -272,9 +265,9 @@ const AboutUsScreen = ({navigation}) => (
 const TabsCreen = ({navigation}) => (
   <Tabs.Navigator
     initialRouteName="wherehouse"
-    activeColor="white"
-    inactiveColor="#90a4ae"
-    barStyle={{backgroundColor: '#3B7457'}}>
+    activeColor="#3B7457"
+    inactiveColor="#bdbdbd"
+    barStyle={{backgroundColor: 'white'}}>
     <Tabs.Screen
       options={{
         unmountInactiveRoutes: true,
@@ -282,15 +275,7 @@ const TabsCreen = ({navigation}) => (
         unmountOnBlur: true,
         tabBarLabel: 'Home',
         tabBarIcon: ({color}) => (
-          <Icon 
-          name="home-outline" 
-          iconStyle={{
-        
-            fontWeight: 'normal',
-  
-          }}
-          size={23} color={color} />
-          // <MaterialCommunityIcons name="home" color={color} size={26} />
+          <MaterialCommunityIcons name="home" color={color} size={26} />
         ),
       }}
       name="wherehouse"
@@ -310,13 +295,7 @@ const TabsCreen = ({navigation}) => (
         unmountOnBlur: true,
         tabBarLabel: 'Profile',
         tabBarIcon: ({color}) => (
-          <Icon 
-          name="person-outline" 
-          iconStyle={{
-            fontWeight: 'normal',
-          }}
-          size={23} color={color} />
-          // <MaterialCommunityIcons name="account" color={color} size={26} />
+          <MaterialCommunityIcons name="account" color={color} size={26} />
         ),
       }}
       name="Profile"
@@ -330,13 +309,7 @@ const TabsCreen = ({navigation}) => (
         unmountOnBlur: true,
         tabBarLabel: 'Orders',
         tabBarIcon: ({color}) => (
-          <Icon 
-          name="fast-food-outline" 
-          iconStyle={{
-            fontWeight: 'normal',
-          }}
-          size={23} color={color} />
-          // <MaterialCommunityIcons name="border-all" color={color} size={26} />
+          <MaterialCommunityIcons name="border-all" color={color} size={26} />
         ),
       }}
       name="OrderHistory"
@@ -348,17 +321,7 @@ const TabsCreen = ({navigation}) => (
         unmountOnBlur: true,
         tabBarLabel: 'Loyality Card',
         tabBarIcon: ({color}) => (
-          <Icon 
-          name="card-outline" 
-          iconStyle={{
-            fontSize: 25,
-            fontWeight: 'normal',
-            paddingLeft: 15,
-            paddingRight: 15,
-            paddingTop: 3,
-          }}
-          size={23} color={color} />
-          // <MaterialCommunityIcons name="credit-card" color={color} size={26} />
+          <MaterialCommunityIcons name="credit-card" color={color} size={26} />
         ),
       }}
       name="WhereHouse"
@@ -417,9 +380,9 @@ export default function App() {
         <StackApp.Screen
           name="TabScreentest"
           options={{
-            headerShown: false,
-            // title: 'Our Menu',
-            // headerStyle: {backgroundColor: '#fff', elevation: 0},
+            headerShown: true,
+            title: 'Our Menu',
+            headerStyle: {backgroundColor: '#fff', elevation: 0},
           }}
           component={TabScreentest}
         />
@@ -432,7 +395,7 @@ export default function App() {
         {/* <StackApp.Screen name="AboutUsScreeen" options={{ headerShown: false }} component={AboutUsScreeen} /> */}
         <StackApp.Screen
           name="Cart"
-          options={{headerShown: false}}
+          options={{headerShown: true}}
           component={Cart}
         />
         <StackApp.Screen
@@ -456,10 +419,19 @@ export default function App() {
           options={{headerShown: false}}
           component={SignUp}
         />
-
-        <StackApp.Screen name="Boxes Cart"  options={{headerShown: false}}  component={BoxesCart} />
+        <StackApp.Screen
+          name="Forgotpw"
+          options={{headerShown: false}}
+          component={ForgotPw}
+        />
+        <StackApp.Screen
+          name="ForgotPwScreen"
+          options={{headerShown: false}}
+          component={ForgotPwScreen}
+        />
+        <StackApp.Screen name="Boxes Cart" component={BoxesCart} />
         {/* <StackApp.Screen name="OrderHistory"  component={OrderHistory}/> */}
-        <StackApp.Screen name="Box Orders" options={{headerShown: false}}  component={BoxOrders}/>
+        <StackApp.Screen name="Box Orders"  component={BoxOrders}/>
         {/* <StackApp.Screen name="Profile"  options={{headerShown: false}} component={Profile}/> */}
         {/* <StackApp.Screen
           name="CommercialBoxes"

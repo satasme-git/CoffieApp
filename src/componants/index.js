@@ -30,6 +30,7 @@ export * from './CommercialBoxes';
 export * from './HomeAppliance';
 export * from './OrderHistory';
 export * from './BoxOrders';
-
+export * from './ForgotPw';
+export * from './ForgotPwScreen';
 
 

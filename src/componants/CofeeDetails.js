@@ -113,13 +113,10 @@ export class CofeeDetails extends Component {
         this.setState({
           _aaa: cart_count,
         });
-        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ;dsd adasd a : "+cart_count);
       })
       .catch((err) => {
         console.log(err);
       });
-
-      
   }
   getFoodById() {
     fetch('https://satasmemiy.tk/getFoodById/' + this.props.route.params.id, {
@@ -158,6 +155,7 @@ export class CofeeDetails extends Component {
             function () {},
           );
         } else {
+
           this.setState(
             {
               isLoading: false,
@@ -459,7 +457,6 @@ export class CofeeDetails extends Component {
             navigation={this.props.navigation}
           />
 
-{/* <CustomHeader title="Our Menu" isPost isHome={false}  bgcolor='red' bdcolor='#3B7457' navigation={this.props.navigation} /> */}
           <View style={styles.header}>
             <View
               style={{
@@ -660,11 +657,14 @@ export class CofeeDetails extends Component {
             </ScrollView>
             <View
               style={{
+           
                 backgroundColor: 'white',
                 borderTopLeftRadius: 20,
                 borderTopRightRadius: 20,
               }}>
-              <View style={{padding: 10}}>
+              <View style={{padding: 10, }}>
+              
+
                 <Button
                   // loading={loading}
                   title="Make Order"

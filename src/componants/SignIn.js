@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Image,
   Alert,
+  Dimensions
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
@@ -20,6 +21,15 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
 import {SCLAlert, SCLAlertButton} from 'react-native-scl-alert';
+
+import {Validation} from '../components/Validation'
+
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
+import Modal from 'react-native-modal';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 export class SignIn extends Component {
   
   constructor(props) {
@@ -28,6 +38,15 @@ export class SignIn extends Component {
     this.state = {
       TextInputEmail: '',
       TextInputPassword: '',
+
+      
+      evalidate: true,
+      pvalidate: true,
+      emsg:'',
+      pmsg:'',
+
+      isVisible:false,
+      isVisible2:false
     };
   }
 
@@ -57,7 +76,66 @@ export class SignIn extends Component {
         // }, function () {
         //     // In this block you can do something with new state.
         // });
+        console.log(responseJson)
 
+        // this.setState(
+        //   {
+        //     evalidate:responseJson.status,
+        //     pvalidate:responseJson.status,
+            
+        //   }
+        // )
+
+        if (responseJson.validation==null){
+          null
+        }
+        else{
+        if(responseJson.validation.email==null && responseJson.validation.password==null){
+          this.setState(
+            {
+              emsg:'Email is Required',
+              pmsg:'Password is Required',
+              evalidate:responseJson.status,
+              pvalidate:responseJson.status,
+            }
+          )
+        }
+        else if(responseJson.validation.email==null){
+          this.setState(
+            {
+              emsg:'Email is Required', 
+              evalidate:responseJson.status,
+              pvalidate:true,
+            }
+          )
+        }
+        else if(responseJson.validation.password==null){
+          this.setState(
+            {
+              pmsg:'Password is Required', 
+              pvalidate:responseJson.status,
+              evalidate:true,
+            }
+          )
+        }
+        else if(responseJson.validation.password!==null || responseJson.validation.email!==null && responseJson.status==true){
+          this.setState(
+            {
+              pmsg:responseJson.msg,
+              emsg:responseJson.msg, 
+              pvalidate:true,
+              evalidate:true, 
+              isVisible2:true
+            }
+          )
+          // Alert.alert(
+          //   'Error', responseJson.msg, [
+          //   {text: 'OK'},
+          // ]);
+
+          
+
+        }}
        
         var logimsg = responseJson.msg;
         if (responseJson.id != undefined) {
@@ -87,11 +165,18 @@ export class SignIn extends Component {
                   //   },
                   //   {text: 'OK', onPress: () => console.log('OK Pressed')},
                   // ]);
-                  Alert.alert(
-                    'Success', 'You are successfully logged', [
-                    {text: 'OK', onPress: () => console.log('OK Pressed')},
-                  ]);
-                  this.props.navigation.navigate('wherehouse');
+
+                  // Alert.alert(
+                  //   'Sussess', 'You are successfully logged', [
+                  //   {text: 'OK', onPress: () => console.log('OK Pressed')},
+                  // ]);
+                  this.setState(
+                    {
+                      isVisible:true
+                    }
+                  )
+
+                  // this.props.navigation.navigate('wherehouse');
            
                 }
               });
@@ -106,11 +191,14 @@ export class SignIn extends Component {
 
           AsyncStorage.setItem('cus_name', responseJson.name);
         } else {
-          showMessage({
-            message: 'Login Fail',
-            description: responseJson.msg,
-            backgroundColor: 'red',
-          });
+
+          // showMessage({
+          //   message: 'Login Fail',
+          //   description: responseJson.msg,
+          //   backgroundColor: 'red',
+          // });
+          null
+
         }
       })
       .catch((error) => {
@@ -118,9 +206,12 @@ export class SignIn extends Component {
       });
   };
   render() {
+    
+    const {isVisible,isVisible2} = this.state;
+
     return (
       <SafeAreaView style={styles.container}>
-        <FlashMessage id={2} duration={1000} />
+        <FlashMessage duration={1000} />
        
         <StatusBar
           barStyle="light-content"
@@ -133,9 +224,8 @@ export class SignIn extends Component {
             color: 'white',
             backgroundColor: '#3B7457',
             alignItems: 'flex-end',
-            paddingTop: 5,
+            paddingTop: 10,
             paddingEnd: 20,
-            paddingBottom:5
           }}>
         
           <Button
@@ -143,7 +233,7 @@ export class SignIn extends Component {
             type="outline"
             titleStyle={{color: 'white', fontWeight: 'normal', fontSize: 14}}
             buttonStyle={
-              (
+              (styles.submitText,
               {
                 borderRadius: 25,
                 width: 80,
@@ -158,7 +248,7 @@ export class SignIn extends Component {
           />
         
         </View>
-        <LinearGradient colors={['#F2F2F2', '#F2F2F2']} style={styles.gradient}>
+        <LinearGradient colors={['#3B7457', '#3B7457']} style={styles.gradient}>
           {/* <CustomHeader title="" isHome={false} bdcolor='#00897b' navigation={this.props.navigation} /> */}
           <ScrollView
             contentInsetAdjustmentBehavior="automatic"
@@ -177,21 +267,148 @@ export class SignIn extends Component {
                     fontSize: 26,
                     fontWeight: 'bold',
                     marginTop: 15,
-                    color: 'black',
+                    color: '#fff',
                   }}>
                   Welcome{' '}
                 </Text>
-                <Text style={{fontSize: 14, color: 'gray', marginBottom: 25}}>
+                <Text style={{fontSize: 14, color: '#fff', marginBottom: 25}}>
                   Use email to Login
                 </Text>
               </View>
+
+                  {/* manoj */}
+                  <Modal 
+                  isVisible={isVisible2}
+                  // isVisible={true}
+                  backdropOpacity={0.5}
+                  animationIn={'bounceIn'}
+                  >
+                    <View>
+                      <View style={{flexDirection:'row',marginBottom:-30,zIndex:1}}>
+                        <View style={{backgroundColor: '#ea3f37',height:40,width:windowWidth-100,borderTopLeftRadius:5,alignItems:'center',padding:10,flexDirection:'row'}} >
+                          <MaterialIcons
+                              name="error"
+                              size={25}
+                              color={'white'}
+                              style={{alignSelf:'center',paddingRight:10}}
+                          />
+
+                          <Text style={{color:'white'}}>Error</Text>
+                        </View>
+                        <View style={{
+                          width: 0,
+                          height: 0,
+                          backgroundColor: "transparent",
+                          borderStyle: "solid",
+                          borderRightWidth: 20,
+                          borderTopWidth: 40,
+                          borderRightColor: "transparent",
+                          borderTopColor: "#ea3f37",
+                        }}/>
+                        <View style={{
+                          width: 0,
+                          height: 0,
+                          backgroundColor: "transparent",
+                          borderStyle: "solid",
+                          borderLeftWidth: 5,
+                          borderRightWidth: 5,
+                          borderBottomWidth: 10,
+                          borderLeftColor: "transparent",
+                          borderRightColor: "transparent",
+                          borderBottomColor: "#940700",
+                          marginLeft:-5
+                        }}/>
+                      </View>
+                      
+                     <View style={{backgroundColor:'white',padding:15,paddingTop:40,borderRadius:5}}>
+                      <Text style={{fontSize:16}}>Invalid Username or Password</Text>
+            
+                      <Button 
+                      title="Ok"
+                      
+                      titleStyle={{color:'black',fontSize:17}} 
+                      buttonStyle={{alignSelf:'flex-end',marginTop:10,paddingVertical:5,borderColor:'#ea3f37',paddingHorizontal:20,backgroundColor:'white',borderWidth:2,borderRadius:10}}
+                      onPress={()=>
+                      this.setState({
+                        isVisible2:false
+                      })
+                      }
+                      />
+                      
+                    </View> 
+                    </View>
+                    
+                  </Modal>
+                 
+                  <Modal 
+                  isVisible={isVisible}
+                  // isVisible={true}
+                  backdropOpacity={0.5}
+                  animationIn={'bounceIn'}
+                  >
+                    <View>
+                      <View style={{flexDirection:'row',marginBottom:-30,zIndex:1}}>
+                        <View style={{backgroundColor: 'green',height:40,width:windowWidth-100,borderTopLeftRadius:5,alignItems:'center',padding:10,flexDirection:'row'}} >
+                          <MaterialIcons
+                              name="done"
+                              size={25}
+                              color={'white'}
+                              style={{alignSelf:'center',paddingRight:10}}
+                          />
+
+                          <Text style={{color:'white'}}>Success</Text>
+                        </View>
+                        <View style={{
+                          width: 0,
+                          height: 0,
+                          backgroundColor: "transparent",
+                          borderStyle: "solid",
+                          borderRightWidth: 20,
+                          borderTopWidth: 40,
+                          borderRightColor: "transparent",
+                          borderTopColor: "green",
+                        }}/>
+                        <View style={{
+                          width: 0,
+                          height: 0,
+                          backgroundColor: "transparent",
+                          borderStyle: "solid",
+                          borderLeftWidth: 5,
+                          borderRightWidth: 5,
+                          borderBottomWidth: 10,
+                          borderLeftColor: "transparent",
+                          borderRightColor: "transparent",
+                          borderBottomColor: "#104c2e",
+                          marginLeft:-5
+                        }}/>
+                      </View>
+                      
+                     <View style={{backgroundColor:'white',padding:15,paddingTop:40,borderRadius:5}}>
+                      <Text style={{fontSize:16}}>You are successfully logged</Text>
+            
+                      <Button 
+                      title="Ok"
+                      
+                      titleStyle={{color:'black',fontSize:17}} 
+                      buttonStyle={{alignSelf:'flex-end',marginTop:10,paddingVertical:5,borderColor:'#3B7457',paddingHorizontal:20,backgroundColor:'white',borderWidth:2,borderRadius:10}}
+                      onPress={()=>
+                      {this.setState({
+                        isVisible:false
+                      });this.props.navigation.navigate('wherehouse');}
+                      }
+                      />
+                      
+                    </View> 
+                    </View>
+                    
+                  </Modal>
 
               <Animatable.View
                 animation="flipInY"
                 style={{
                   justifyContent: 'center',
                   alignItems: 'center',
-                  marginTop: 20,
+                  marginTop: 0,
                 }}>
                 <Image
                   style={{width: 160, height: 140, marginLeft: 0}}
@@ -214,10 +431,10 @@ export class SignIn extends Component {
                   style={{
                     alignItems: 'center',
                     flexDirection: 'row',
-                    borderColor: 'black',
+                    borderColor: 'gray',
                     borderWidth: 0.5,
                     borderRadius: 25,
-                    backgroundColor: 'white',
+                    backgroundColor: '#F2F2F2',
                     paddingLeft: 10,
                   }}>
                   <Icon
@@ -230,11 +447,23 @@ export class SignIn extends Component {
                     onChangeText={(TextInputValue) =>
                       this.setState({TextInputEmail: TextInputValue})
                     }
-                    style={{width: '85%'}}
+                    style={{width: '75%'}}
                     placeholder="Enter User Name"
                     onEndEditing={this.clearFocus}
                     autoFocus={false}
+                    onFocus={
+                      ()=>this.setState({
+                        evalidate:true
+                      })
+                    }
                   />
+                  {
+                    this.state.evalidate==false?
+                    <Validation text={this.state.emsg} />
+                    :
+                    null
+                  }
+                  
                 </View>
                 <Text
                   style={{
@@ -249,10 +478,10 @@ export class SignIn extends Component {
                   style={{
                     alignItems: 'center',
                     flexDirection: 'row',
-                    borderColor: 'black',
+                    borderColor: 'gray',
                     borderWidth: 0.5,
                     borderRadius: 25,
-                    backgroundColor: 'white',
+                    backgroundColor: '#F2F2F2',
                     paddingLeft: 10,
                   }}>
                   <Icon
@@ -266,12 +495,30 @@ export class SignIn extends Component {
                     onChangeText={(TextInputValue) =>
                       this.setState({TextInputPassword: TextInputValue})
                     }
-                    style={{width: '85%'}}
+                    style={{width: '75%'}}
                     placeholder="Enter Password"
                     onEndEditing={this.clearFocus}
                     autoFocus={false}
+                    onFocus={
+                      ()=>this.setState({
+                        pvalidate:true
+                      })
+                    }
                   />
+                  {
+                    this.state.pvalidate==false?
+                    <Validation text={'Password is Required'} />
+                    :
+                    null
+                  }
+                  
                 </View>
+                <Text
+                    style={{color: 'yellow',marginTop:15,textAlign:'center'}}
+                    onPress={() => this.props.navigation.navigate('Forgotpw')}>
+                    {' '}
+                    Forgot Password?
+                  </Text>
                 {/* <TouchableOpacity activeOpacity={1.0} ref="touchableOpacity" style={{ marginTop: 40, }} onPress={this.InputUsers}>
 
                 <LinearGradient colors={['#fff', '#fff']}
@@ -285,14 +532,21 @@ export class SignIn extends Component {
   </Text>
                 </LinearGradient>
               </TouchableOpacity> */}
+                    {/* <Text
+                      style={{color: 'yellow',marginTop:15,textAlign:'center',marginBottom:-15}}
+                      onPress={() => this.props.navigation.navigate('Forgotpw')}>
+                      {' '}
+                      Forgot Password?
+                    </Text> */}
+
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                  <Text style={{paddingVertical: 25, color: 'black'}}>
-                    Don't have account? 
+                  <Text style={{paddingVertical: 25, color: '#fff'}}>
+                    Don't have account?
                     <Text
-                      style={{color: 'gray'}}
+                      style={{color: 'yellow'}}
                       onPress={() => this.props.navigation.navigate('SignUp')}>
-                     
-                       create new Account
+                      {' '}
+                      create new Account
                     </Text>
                   </Text>
                 </View>
@@ -305,7 +559,6 @@ export class SignIn extends Component {
                     borderRadius: 25,
                     borderColor: 'white',
                     color: 'white',
-                    backgroundColor:'#3B7457',
                     padding: 12,
                     borderWidth: 1,
                     marginBottom: 20,
@@ -360,5 +613,19 @@ const styles = StyleSheet.create({
   },
   gradient: {
     flex: 1,
+  },
+  ////////////////// manoj
+  content: {
+    padding: 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    borderRadius: 0,
+    borderTopWidth:3,
+    borderColor:'red'
+  },
+  arrow: {
+    borderTopColor: 'red',
+  },
+  background: {
+    backgroundColor: 'rgba(0, 0, 0, 0)',
   },
 });
